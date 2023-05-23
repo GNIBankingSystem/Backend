@@ -36,9 +36,9 @@ public class AccountController {
 
 
     @PostMapping
-    public ResponseEntity<Account> add(@RequestBody Account car) {
+    public ResponseEntity<Account> add(@RequestBody Account a) {
 
-        return ResponseEntity.status(201).body(service.add(car));
+        return ResponseEntity.status(201).body(service.add(a));
     }
 
     @PutMapping("/{id}")

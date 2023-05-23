@@ -1,17 +1,14 @@
 package com.gni.banking.Service;
-
-import com.gni.banking.Enums.Status;
 import com.gni.banking.Model.Account;
-import com.gni.banking.Model.AccountRequestDTO;
 import com.gni.banking.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class AccountService {
+
     @Autowired
     private AccountRepository accountRepository;
 
@@ -19,12 +16,21 @@ public class AccountService {
         return (List<Account>) accountRepository.findAll();
     }
 
-    public Account add(Account a) {
-        return accountRepository.save(a);
-    }
-
     public Account getById(long id) {
         return accountRepository.findById(id).orElse(null);
+    }
+
+    public List<Account> getAccountByUserId(long userId) throws Exception {
+        try {
+            return (List<Account>) accountRepository.findByUserId(userId);
+        } catch (Exception ex) {
+            throw new Exception("Required fields missing");
+        }
+
+    }
+
+    public Account add(Account a) {
+        return accountRepository.save(a);
     }
 
     public Account update(Account account, long id) throws Exception {
@@ -39,7 +45,7 @@ public class AccountService {
 
         try {
             return accountRepository.save(existingAccount);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             throw new Exception("Required fields missing");
         }
     }
