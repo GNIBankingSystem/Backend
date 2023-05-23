@@ -1,15 +1,13 @@
 package com.gni.banking.Model;
 
-import java.util.Date;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class TransactionRequestDTO {
-
-    private String ibanFrom;
-
-    private String ibanTo;
-
+    private long id;
+    private String accountFrom;
+    private String accountTo;
     private double amount;
-
-    private String description;
-
 }
