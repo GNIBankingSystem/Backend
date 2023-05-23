@@ -8,7 +8,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AccountRepository extends CrudRepository<Account, Long> {
     Iterable<Account> findByIban(String iban);
-
-    @Override
-    Iterable<Account> deleteById();
 }
