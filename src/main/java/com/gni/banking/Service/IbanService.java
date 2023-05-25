@@ -19,13 +19,10 @@ public class IbanService {
         return iban;
     }
 
-    public boolean IbanExists(String iban) {
+    /*public boolean IbanExists(String iban) {
         //iban getten op /accounts/{iban} --> 404 terug --> iban bestaat nog niet
-    }
+    }*/
 
-    @GetMapping("/accounts/{iban}")
-    public AccountResponseDTO getAccountsByIban(String iban) {
-        // /accounts/{iban}
-    }
+
 
 }
