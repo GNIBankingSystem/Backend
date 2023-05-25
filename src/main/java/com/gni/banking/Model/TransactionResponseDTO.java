@@ -1,26 +1,15 @@
 package com.gni.banking.Model;
 
-import com.gni.banking.Enums.AccountType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
-@Entity
+@Data
+@NoArgsConstructor
 public class TransactionResponseDTO {
-    @Id
-    @GeneratedValue
-    private int id;
-
-    private String ibanTo;
-
-    private String ibanFrom;
-
-    private String description;
-
-    private Date timeStamp;
-
-    private int performedById;
-
-    private AccountType type;
+    private long id;
+    private String timestamp;
+    private String accountFrom;
+    private String accountTo;
+    private double amount;
+    private long performedBy;
 }
