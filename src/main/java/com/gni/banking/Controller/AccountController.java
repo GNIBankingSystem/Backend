@@ -47,7 +47,8 @@ public class AccountController {
     }
 
     @DeleteMapping("/{iban}")
-    public void changeStatus(@PathVariable String iban) {
+    public Account changeStatus(@PathVariable String iban) {
         //TODO implement this method
+        return service.changeStatus(iban);
     }
 }

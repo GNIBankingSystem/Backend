@@ -49,4 +49,14 @@ public class AccountService {
             throw new Exception("Required fields missing");
         }
     }
+
+    public Account changeStatus(String iban) {
+        Account existingAccount = getByIban(iban);
+        if (existingAccount.getStatus().toString().equals("Open")) {
+            existingAccount.setStatus(com.gni.banking.Enums.Status.Closed);
+        } else {
+            existingAccount.setStatus(com.gni.banking.Enums.Status.Open);
+        }
+        return accountRepository.save(existingAccount);
+    }
 }
