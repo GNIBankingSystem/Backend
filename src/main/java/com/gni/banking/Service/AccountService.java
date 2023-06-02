@@ -16,8 +16,8 @@ public class AccountService {
         return (List<Account>) accountRepository.findAll();
     }
 
-    public Account getById(long id) {
-        return accountRepository.findById(id).orElse(null);
+    public Account getByIban(String iban) {
+        return (Account) accountRepository.findByIban(iban).orElse(null);
     }
 
     public List<Account> getAccountByUserId(long userId) throws Exception {
@@ -33,14 +33,14 @@ public class AccountService {
         return accountRepository.save(a);
     }
 
-    public Account update(Account account, long id) throws Exception {
-        Account existingAccount = getById(id);
+    public Account update(Account account, String iban) throws Exception {
+        Account existingAccount = getByIban(iban);
 
-        existingAccount.setIban(account.getIban());
         existingAccount.setUserId(account.getUserId());
         existingAccount.setType(account.getType());
         existingAccount.setAbsoluteLimit(account.getAbsoluteLimit());
         existingAccount.setCurrency(account.getCurrency());
+        existingAccount.setBalance(account.getBalance());
         existingAccount.setStatus(account.getStatus());
 
         try {
@@ -48,9 +48,5 @@ public class AccountService {
         } catch (Exception ex) {
             throw new Exception("Required fields missing");
         }
-    }
-
-    public void delete(long id) {
-        accountRepository.deleteById(id);
     }
 }

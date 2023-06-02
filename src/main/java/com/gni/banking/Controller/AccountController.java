@@ -29,9 +29,9 @@ public class AccountController {
         return service.getAll();
     }
 
-    @GetMapping("/{id}")
-    public Account getAccountById(@PathVariable long id) {
-        return service.getById(id);
+    @GetMapping("/{iban}")
+    public Account getAccountById(@PathVariable String iban) {
+        return service.getByIban(iban);
     }
 
 
@@ -41,14 +41,13 @@ public class AccountController {
         return ResponseEntity.status(201).body(service.add(a));
     }
 
-    @PutMapping("/{id}")
-    public Account update(@RequestBody Account account, @PathVariable long id) throws Exception {
-        return service.update(account, id);
+    @PutMapping("/{iban}")
+    public Account update(@RequestBody Account account, @PathVariable String iban) throws Exception {
+        return service.update(account, iban);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable long id) {
-        service.delete(id);
+    @DeleteMapping("/{iban}")
+    public void changeStatus(@PathVariable String iban) {
+        //TODO implement this method
     }
-
 }
