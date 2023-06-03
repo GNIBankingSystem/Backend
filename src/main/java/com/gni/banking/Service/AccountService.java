@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccountService {
@@ -14,12 +15,15 @@ public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private IbanService ibanService;
+
     public List<Account> getAll() {
         return (List<Account>) accountRepository.findAll();
     }
 
-    public Account getById(long id) {
-        return accountRepository.findById(id).orElse(null);
+    public Account getById(String id) {
+        return accountRepository.findById(id).orElseThrow();
     }
 
     public List<Account> getAccountByUserId(long userId) throws Exception {
@@ -32,13 +36,15 @@ public class AccountService {
     }
 
     public Account add(Account a) {
+        String iban = ibanService.GenerateIban();
+        a.setId(iban);
         return accountRepository.save(a);
     }
 
-    public Account update(Account account, long id) throws Exception {
+    public Account update(Account account, String id) throws Exception {
         Account existingAccount = getById(id);
 
-        existingAccount.setIban(account.getIban());
+        //existingAccount.setIban(account.getIban());
         existingAccount.setUserId(account.getUserId());
         existingAccount.setType(account.getType());
         existingAccount.setAbsoluteLimit(account.getAbsoluteLimit());
@@ -52,7 +58,7 @@ public class AccountService {
         }
     }
 
-    public void delete(long id) {
+    public void delete(String id) {
         accountRepository.deleteById(id);
     }
 }

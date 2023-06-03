@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/accounts")
@@ -37,10 +38,9 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
-    public Account getAccountById(@PathVariable long id) {
+    public Account getAccountById(@PathVariable String id) {
         return service.getById(id);
     }
-
 
     @PostMapping
     public ResponseEntity<Account> add(@RequestBody Account a) {
@@ -49,12 +49,12 @@ public class AccountController {
     }
 
     @PutMapping("/{id}")
-    public Account update(@RequestBody Account account, @PathVariable long id) throws Exception {
+    public Account update(@RequestBody Account account, @PathVariable String id) throws Exception {
         return service.update(account, id);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable long id) {
+    public void delete(@PathVariable String id) {
         service.delete(id);
     }
 

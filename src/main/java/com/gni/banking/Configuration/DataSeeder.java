@@ -21,7 +21,7 @@ public class DataSeeder implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         Account account = new Account();
-        account.setIban("RO123456789");
+        account.setId("RO123456789");
         account.setUserId(1);
         account.setType(AccountType.Current);
         account.setAbsoluteLimit(1000);
@@ -30,7 +30,7 @@ public class DataSeeder implements ApplicationRunner {
         accountService.add(account);
 
         Account account1 = new Account();
-        account1.setIban("RO123456799");
+        account1.setId("RO123456799");
         account1.setUserId(1);
         account1.setType(AccountType.Current);
         account1.setAbsoluteLimit(1000);

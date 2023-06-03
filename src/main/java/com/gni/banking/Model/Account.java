@@ -18,12 +18,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Account {
     @Id
-    @GeneratedValue
 
-    private Long id;
-
-
-    private String iban;
+    private String id;
 
     private int userId;
 
