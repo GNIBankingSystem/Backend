@@ -22,8 +22,13 @@ public class AccountService {
         return (List<Account>) accountRepository.findAll();
     }
 
+
     public Account getById(String id) {
         return accountRepository.findById(id).orElseThrow();
+
+    public Account getByIban(String iban) {
+        return (Account) accountRepository.findByIban(iban).orElse(null);
+
     }
 
     public List<Account> getAccountByUserId(long userId) throws Exception {
@@ -41,14 +46,15 @@ public class AccountService {
         return accountRepository.save(a);
     }
 
-    public Account update(Account account, String id) throws Exception {
-        Account existingAccount = getById(id);
 
-        //existingAccount.setIban(account.getIban());
+    public Account update(Account account, String iban) throws Exception {
+        Account existingAccount = getByIban(iban);
+
         existingAccount.setUserId(account.getUserId());
         existingAccount.setType(account.getType());
         existingAccount.setAbsoluteLimit(account.getAbsoluteLimit());
         existingAccount.setCurrency(account.getCurrency());
+        existingAccount.setBalance(account.getBalance());
         existingAccount.setStatus(account.getStatus());
 
         try {
@@ -60,5 +66,15 @@ public class AccountService {
 
     public void delete(String id) {
         accountRepository.deleteById(id);
+
+    public Account changeStatus(String iban) {
+        Account existingAccount = getByIban(iban);
+        if (existingAccount.getStatus().toString().equals("Open")) {
+            existingAccount.setStatus(com.gni.banking.Enums.Status.Closed);
+        } else {
+            existingAccount.setStatus(com.gni.banking.Enums.Status.Open);
+        }
+        return accountRepository.save(existingAccount);
+
     }
 }

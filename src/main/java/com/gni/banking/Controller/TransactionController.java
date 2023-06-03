@@ -6,6 +6,7 @@ import com.gni.banking.Model.TransactionResponseDTO;
 import com.gni.banking.Service.TransactionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -16,7 +17,6 @@ import java.util.List;
 
 public class TransactionController {
     @Autowired
-
     private TransactionService service;
     private ModelMapper modelMapper;
     public TransactionController() {
@@ -37,15 +37,26 @@ public class TransactionController {
     }
 
     @PostMapping
-    public TransactionResponseDTO add(@RequestBody TransactionRequestDTO transactionRequestDTO){
-        Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
-        return  modelMapper.map(service.add(transaction), TransactionResponseDTO.class);
+    public ResponseEntity<?> add(@RequestBody TransactionRequestDTO transactionRequestDTO) {
+        try {
+            Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
+            Transaction addedTransaction = service.add(transaction);
+            return ResponseEntity.ok(modelMapper.map(addedTransaction, TransactionResponseDTO.class));
+        } catch (Exception e) {
+            // Here, we return an error status (such as BAD_REQUEST) and the error message as the response body.
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public TransactionResponseDTO update(@RequestBody TransactionRequestDTO transactionRequestDTO, @PathVariable long id){
-        Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
-        return  modelMapper.map(service.update(transaction, id), TransactionResponseDTO.class);
+    public ResponseEntity<?> update(@RequestBody TransactionRequestDTO transactionRequestDTO, @PathVariable long id){
+        try{
+            Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
+            return  ResponseEntity.ok(modelMapper.map(service.update(transaction, id), TransactionResponseDTO.class));
+        }
+        catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")

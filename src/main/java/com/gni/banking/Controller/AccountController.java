@@ -48,15 +48,14 @@ public class AccountController {
         return ResponseEntity.status(201).body(service.add(a));
     }
 
-    @PutMapping("/{id}")
-    public Account update(@RequestBody Account account, @PathVariable String id) throws Exception {
-        return service.update(account, id);
+    @PutMapping("/{iban}")
+    public Account update(@RequestBody Account account, @PathVariable String iban) throws Exception {
+        return service.update(account, iban);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable String id) {
-        service.delete(id);
+    @DeleteMapping("/{iban}")
+    public Account changeStatus(@PathVariable String iban) {
+        //TODO implement this method
+        return service.changeStatus(iban);
     }
-
-
 }

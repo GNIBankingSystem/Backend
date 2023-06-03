@@ -5,7 +5,6 @@ import com.gni.banking.Enums.AccountType;
 import com.gni.banking.Enums.Currency;
 import com.gni.banking.Enums.Status;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +27,8 @@ public class Account {
     private double absoluteLimit;
 
     private Currency currency;
+
+    private double balance;
 
     private Status status;
 

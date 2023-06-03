@@ -13,4 +13,6 @@ public interface TransactionRepository extends CrudRepository<Transaction, Long>
 
     @Query("SELECT t FROM Transaction t WHERE t.archived = false")
     Iterable<Transaction> findAll();
+
+
 }
