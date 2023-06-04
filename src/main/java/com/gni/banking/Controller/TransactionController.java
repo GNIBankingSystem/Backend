@@ -41,9 +41,14 @@ public class TransactionController {
 
 
     @GetMapping("/{id}")
-    public TransactionResponseDTO getById(@PathVariable long id) {
-        Transaction transaction = service.getById(id);
-        return modelMapper.map(transaction, TransactionResponseDTO.class);
+    public ResponseEntity<?> getById(@PathVariable long id) {
+        try{
+            Transaction transaction = service.getById(id);
+            return ResponseEntity.ok(modelMapper.map(transaction, TransactionResponseDTO.class));
+        }catch (Exception e){
+            ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.BAD_REQUEST, "Transaction not found");
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping

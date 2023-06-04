@@ -5,6 +5,7 @@ import com.gni.banking.Enums.Status;
 import com.gni.banking.Model.Account;
 import com.gni.banking.Model.Transaction;
 import com.gni.banking.Repository.TransactionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,6 +53,7 @@ public class TransactionService {
         return repository.save(transaction);
     }
 
+    @Transactional
     public void delete(long id) {
         repository.archiveById(id);
     }
