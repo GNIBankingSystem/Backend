@@ -6,11 +6,16 @@ import com.gni.banking.Model.TransactionResponseDTO;
 import com.gni.banking.Service.TransactionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/transactions")
@@ -25,10 +30,15 @@ public class TransactionController {
     }
 
     @GetMapping
-    public List<TransactionResponseDTO> getAll() {
-        List<Transaction> transactions = service.getAll();
-        return Arrays.asList(modelMapper.map(transactions, TransactionResponseDTO[].class));
+    public List<TransactionResponseDTO> getAll(@RequestParam(defaultValue = "0") int offset, @RequestParam(defaultValue = "10") int limit) {
+        int page = offset / limit;
+        Page<Transaction> transactions = service.getAll(limit, page);
+        return transactions.getContent().stream()
+                .map(transaction -> modelMapper.map(transaction, TransactionResponseDTO.class))
+                .collect(Collectors.toList());
     }
+
+
 
     @GetMapping("/{id}")
     public TransactionResponseDTO getById(@PathVariable long id) {
@@ -43,10 +53,12 @@ public class TransactionController {
             Transaction addedTransaction = service.add(transaction);
             return ResponseEntity.ok(modelMapper.map(addedTransaction, TransactionResponseDTO.class));
         } catch (Exception e) {
-            // Here, we return an error status (such as BAD_REQUEST) and the error message as the response body.
-            return ResponseEntity.badRequest().body(e.getMessage());
+            ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.BAD_REQUEST, e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
     }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody TransactionRequestDTO transactionRequestDTO, @PathVariable long id){
@@ -55,7 +67,8 @@ public class TransactionController {
             return  ResponseEntity.ok(modelMapper.map(service.update(transaction, id), TransactionResponseDTO.class));
         }
         catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+            ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.BAD_REQUEST, e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
     }
 
