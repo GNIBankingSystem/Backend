@@ -1,6 +1,7 @@
 package com.gni.banking.Service;
 
 import com.gni.banking.Model.Account;
+import com.gni.banking.Model.User;
 import com.gni.banking.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class AccountService {
 
     @Autowired
     private IbanService ibanService;
+
+    @Autowired
+    private UserService userService;
 
     public List<Account> getAll() {
         return (List<Account>) accountRepository.findAll();
@@ -80,5 +84,17 @@ public class AccountService {
         }
         return accountRepository.save(existingAccount);
 
+    }
+
+    public String getIbanByUserId(long userId) {
+        return accountRepository.getIdByUserId(userId);
+    }
+
+    public String getIbanByName(String name) {
+        String firstname = name.split("-")[0];
+        String lastName = name.split("-")[1];
+        User user =  userService.findByFirstNameAndLastName(firstname, lastName);
+        String iban = accountRepository.getIdByUserId(user.getId());
+        return iban;
     }
 }

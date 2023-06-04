@@ -6,14 +6,18 @@ import com.gni.banking.Enums.Status;
 import com.gni.banking.Model.Account;
 import com.gni.banking.Model.AccountRequestDTO;
 import com.gni.banking.Model.Transaction;
+import com.gni.banking.Model.User;
 import com.gni.banking.Service.AccountService;
 import com.gni.banking.Service.TransactionService;
+import com.gni.banking.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+
+import static com.gni.banking.Enums.Role.Customer;
 
 @Component
 public class DataSeeder implements ApplicationRunner {
@@ -23,8 +27,26 @@ public class DataSeeder implements ApplicationRunner {
     @Autowired
     TransactionService transactionService;
 
+    @Autowired
+    UserService userService;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
+
+        User user1 = new User();
+        user1.setId(1);
+        user1.setAccountCount(1);
+        user1.setDayLimit(3000.00);
+        user1.setEmail("PieterVenema@gmail.com");
+        user1.setFirstName("Pieter");
+        user1.setLastName("Venema");
+        user1.setPassword("Pieter123");
+        user1.setPhoneNumber(612345678);
+        user1.setRole(Customer);
+        user1.setTransactionLimit(1000.00);
+        userService.add(user1);
+
+
         Account account = new Account();
         account.setId("NL01INHO0000000001");
         account.setUserId(1);

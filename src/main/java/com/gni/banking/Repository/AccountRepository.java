@@ -20,4 +20,6 @@ public interface AccountRepository extends CrudRepository<Account, String> {
     @Override
     Optional<Account> findById(String iban);
 
+    public String getIdByUserId(long userId);
+
 }

@@ -58,4 +58,9 @@ public class AccountController {
         //TODO implement this method
         return service.changeStatus(iban);
     }
+
+    @GetMapping("/getIban/{name}")
+    public String getIbanByName(@PathVariable String name) throws Exception {
+        return service.getIbanByName(name);
+    }
 }
