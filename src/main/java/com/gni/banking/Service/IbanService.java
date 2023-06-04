@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class IbanService {
@@ -19,11 +20,23 @@ public class IbanService {
 
 
     public String GenerateIbanNewIban() {
-        // NLxxINHO0xxxxxxxxx
-            int rndFirstNumber = (int) (Math.random() * 100);
-            int rndSecondNumber = (int) (Math.random() * 1000000000);
-            String iban = "NL" + rndFirstNumber + "INHO0" + rndSecondNumber;
-        return iban;
+        StringBuilder ibanBuilder = new StringBuilder("NL");
+
+        // Generate random two-digit number
+        Random random = new Random();
+        int randomDigits = random.nextInt(100);
+        ibanBuilder.append(String.format("%02d", randomDigits));
+
+        // Append the constant characters "INHO0"
+        ibanBuilder.append("INHO0");
+
+        // Generate random nine-digit number
+        for (int i = 0; i < 9; i++) {
+            int randomNum = random.nextInt(10);
+            ibanBuilder.append(randomNum);
+        }
+
+        return ibanBuilder.toString();
     }
 
     public String GenerateIban(){

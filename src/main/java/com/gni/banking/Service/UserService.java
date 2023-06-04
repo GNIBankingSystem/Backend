@@ -9,4 +9,9 @@ import org.springframework.stereotype.Service;
 public class UserService {
     @Autowired
     private UserRepository repository;
+
+
+    public Integer getUserIdOnFirstName(String firstName) {
+        return repository.getUserIdOnFirstName(firstName);
+    }
 }

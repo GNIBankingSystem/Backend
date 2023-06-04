@@ -25,9 +25,10 @@ public class AccountService {
 
     public Account getById(String id) {
         return accountRepository.findById(id).orElseThrow();
+    }
 
     public Account getByIban(String iban) {
-        return (Account) accountRepository.findByIban(iban).orElse(null);
+        return (Account) accountRepository.findById(iban).orElse(null);
 
     }
 
@@ -37,12 +38,14 @@ public class AccountService {
         } catch (Exception ex) {
             throw new Exception("Required fields missing");
         }
-
     }
 
     public Account add(Account a) {
-        String iban = ibanService.GenerateIban();
-        a.setId(iban);
+        if(a.getId() == null || a.getId().isEmpty()) {
+            a.setId(ibanService.GenerateIban());
+            String iban = ibanService.GenerateIban();
+            a.setId(iban);
+        }
         return accountRepository.save(a);
     }
 
@@ -66,6 +69,7 @@ public class AccountService {
 
     public void delete(String id) {
         accountRepository.deleteById(id);
+    }
 
     public Account changeStatus(String iban) {
         Account existingAccount = getByIban(iban);

@@ -13,13 +13,11 @@ public interface AccountRepository extends CrudRepository<Account, String> {
     Iterable<Account> findByUserId(long userId);
 
 
-    @Override
-    Optional<Account> findById(String id);
 
 
     @Query("SELECT COUNT(a) > 0 FROM Account a WHERE a.id = :iban")
     boolean ibanExists(@Param("iban") String iban);
-
-    Optional<Object> findByIban(String iban);
+    @Override
+    Optional<Account> findById(String iban);
 
 }

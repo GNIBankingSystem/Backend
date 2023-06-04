@@ -88,8 +88,8 @@ public class TransactionService {
     private void updateBalanceOfAccounts(Account accountFrom, Account accountTo, double amount) throws Exception {
         accountFrom.setBalance(accountFrom.getBalance() - amount);
         accountTo.setBalance(accountTo.getBalance() + amount);
-        accountService.update(accountFrom, accountFrom.getIban());
-        accountService.update(accountTo, accountTo.getIban());
+        accountService.update(accountFrom, accountFrom.getId());
+        accountService.update(accountTo, accountTo.getId());
 
     }
 
@@ -105,7 +105,7 @@ public class TransactionService {
             throw new IllegalArgumentException("Invalid IBAN");
 
         //check if iban exists
-        if (accountService.getByIban(accountFrom) == null || accountService.getByIban(accountTo) == null)
+        if (accountService.getById(accountFrom) == null || accountService.getByIban(accountTo) == null)
             throw new IllegalArgumentException("IBAN does not exist");
     }
 
