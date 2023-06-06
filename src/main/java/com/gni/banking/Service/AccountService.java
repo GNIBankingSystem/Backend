@@ -28,10 +28,11 @@ public class AccountService {
 
     public List<Account> getAll(int limit, int offset, String userId) throws Exception {
         Pageable pageable = PageRequest.of(offset, limit);
-        if (Objects.equals(userId, "")){
+        if (Objects.equals(userId, "") || userId == null){
             return accountRepository.findAll(pageable);
         } else if (Objects.equals(userId, "1")) {
             //TODO - make it so you get an error in insomnia because its a the bank account
+            return null;
         } else{
             return accountRepository.findByUserId(userId, pageable);
         }
