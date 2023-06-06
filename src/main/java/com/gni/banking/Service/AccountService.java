@@ -30,7 +30,9 @@ public class AccountService {
         Pageable pageable = PageRequest.of(offset, limit);
         if (Objects.equals(userId, "")){
             return accountRepository.findAll(pageable);
-        }else{
+        } else if (Objects.equals(userId, "1")) {
+            //TODO - make it so you get an error in insomnia because its a the bank account
+        } else{
             return accountRepository.findByUserId(userId, pageable);
         }
     }
@@ -43,14 +45,6 @@ public class AccountService {
     public Account getByIban(String iban) {
         return (Account) accountRepository.findById(iban).orElse(null);
 
-    }
-
-    public List<Account> getAccountByUserId(long userId) throws Exception {
-        try {
-            return (List<Account>) accountRepository.findByUserId(userId);
-        } catch (Exception ex) {
-            throw new Exception("Required fields missing");
-        }
     }
 
     public Account add(Account a) {
