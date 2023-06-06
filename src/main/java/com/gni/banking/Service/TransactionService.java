@@ -1,6 +1,7 @@
 package com.gni.banking.Service;
 
 import com.gni.banking.Enums.AccountType;
+import com.gni.banking.Enums.Role;
 import com.gni.banking.Enums.Status;
 import com.gni.banking.Model.Account;
 import com.gni.banking.Model.Transaction;
@@ -12,9 +13,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
 import java.util.regex.Pattern;
+
 
 @Service
 public class TransactionService {
@@ -23,9 +27,15 @@ public class TransactionService {
     @Autowired
     private AccountService accountService;
 
+
+    @Autowired
+    private UserService userService;
+
+
     public Page<Transaction> getAll(int limit, int offset) {
         Pageable pageable = PageRequest.of(offset, limit);
         return repository.findAll(pageable);
+
     }
 
     public Transaction getById(long id) {
@@ -34,6 +44,23 @@ public class TransactionService {
 
     public Transaction add(Transaction transaction) throws Exception {
         //checks on account type and amount
+        /*String bankIban = "NL01INHO0000000001";
+        Role role = Role.valueOf("employee");
+        if(Objects.equals(transaction.getAccountFrom(), bankIban)){
+            if(role == Role.valueOf("EMPLOYEE")){
+                //do something
+            }else{
+                throw new Exception("You are not allowed to make this transaction");
+            }
+        }
+
+        if(Objects.equals(transaction.getAccountTo(), bankIban)){
+            if(role == Role.valueOf("employee")){
+                //do something
+            }else{
+                throw new Exception("You are not allowed to make this transaction");
+            }
+        }*/
         checksOnMakingAndEditingTransaction(transaction);
         transaction.setTimeStamp(new Date());
         //update balance on accounts
@@ -88,14 +115,16 @@ public class TransactionService {
             throw new Exception("Absolute limit exceeded");
         if (accountFrom.getCurrency() != accountTo.getCurrency())
             throw new Exception("You can't transfer money between accounts with different currencies");
+        if(!underDayLimitWithIban(ibanFrom, amount))
+            throw new Exception("Day limit exceeded");
         return true;
     }
 
     private void updateBalanceOfAccounts(Account accountFrom, Account accountTo, double amount) throws Exception {
         accountFrom.setBalance(accountFrom.getBalance() - amount);
         accountTo.setBalance(accountTo.getBalance() + amount);
-        accountService.update(accountFrom, accountFrom.getIban());
-        accountService.update(accountTo, accountTo.getIban());
+        accountService.update(accountFrom, accountFrom.getId());
+        accountService.update(accountTo, accountTo.getId());
     }
 
     private boolean checkAccountStatus(Account accountFrom, Account accountTo) throws Exception {
@@ -110,7 +139,7 @@ public class TransactionService {
             throw new IllegalArgumentException("Invalid IBAN");
 
         //check if iban exists
-        if (accountService.getByIban(accountFrom) == null || accountService.getByIban(accountTo) == null)
+        if (accountService.getById(accountFrom) == null || accountService.getByIban(accountTo) == null)
             throw new IllegalArgumentException("IBAN does not exist");
     }
 
@@ -124,6 +153,54 @@ public class TransactionService {
 
         // Check if the IBAN matches the pattern
         return Pattern.matches(regex, iban);
+    }
+
+    Double dayLimitAmountRemaining(int userId){
+        return userService.getDayLimitById(userId) - amountTransferredToday(userId);
+    }
+
+    public boolean underDayLimitWithIban(String iban, double amount){
+        int userId = (int) accountService.getById(iban).getUserId();
+        return underDayLimit(userId, amount);
+    }
+
+    public boolean underDayLimit(int userId, double amount){
+        double amountTransferredToday = amountTransferredToday(userId);
+        return amountTransferredToday + amount <= userService.getDayLimitById(userId);
+    }
+
+    Date startDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.add(Calendar.DAY_OF_MONTH, 0);
+        calendar.add(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
+    Date endDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.add(Calendar.DAY_OF_MONTH, 0);
+        calendar.add(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
+    public double amountTransferredToday(int userId){
+
+        //list met accounts --> hier de iban van gebruiken
+        List<Account> accountsOfUser = accountService.getCurrentAndOpenAccountsByUserId(userId);
+        double totalAmountTransferred = 0;
+        for(Account account : accountsOfUser){
+            List<Double> amountOfTransactions = repository.todaysTransactionOfUser(account.getId(), startDate(), endDate());
+            for(Double amount : amountOfTransactions){
+                totalAmountTransferred += amount;
+            }
+        }
+        return totalAmountTransferred;
     }
 
 }

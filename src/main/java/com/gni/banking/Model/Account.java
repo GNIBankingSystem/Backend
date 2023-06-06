@@ -1,4 +1,6 @@
 package com.gni.banking.Model;
+
+
 import com.gni.banking.Enums.AccountType;
 import com.gni.banking.Enums.Currency;
 import com.gni.banking.Enums.Status;
@@ -8,16 +10,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Account {
-
     @Id
-    private String iban;
 
-    private int userId;
+    private String id;
+
+    private long userId;
 
     private AccountType type;
 
@@ -28,4 +31,6 @@ public class Account {
     private double balance;
 
     private Status status;
+
+
 }
