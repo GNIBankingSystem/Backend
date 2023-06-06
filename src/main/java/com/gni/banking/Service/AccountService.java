@@ -6,9 +6,11 @@ import com.gni.banking.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -24,9 +26,13 @@ public class AccountService {
     @Autowired
     private UserService userService;
 
-    public List<Account> getAll(int limit, int offset) {
+    public List<Account> getAll(int limit, int offset, String userId) throws Exception {
         Pageable pageable = PageRequest.of(offset, limit);
-        return accountRepository.findAll(pageable);
+        if (Objects.equals(userId, "")){
+            return accountRepository.findAll(pageable);
+        }else{
+            return accountRepository.findByUserId(userId, pageable);
+        }
     }
 
 

@@ -25,4 +25,6 @@ public interface AccountRepository extends CrudRepository<Account, String> {
     public String getIdByUserId(long userId);
 
     List<Account> findAll(Pageable pageable);
+
+    List<Account> findByUserId(String userId, Pageable pageable);
 }
