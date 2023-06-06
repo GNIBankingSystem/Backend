@@ -5,7 +5,11 @@ import com.gni.banking.Enums.Status;
 import com.gni.banking.Model.Account;
 import com.gni.banking.Model.Transaction;
 import com.gni.banking.Repository.TransactionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -19,8 +23,9 @@ public class TransactionService {
     @Autowired
     private AccountService accountService;
 
-    public List<Transaction> getAll() {
-        return (List<Transaction>) repository.findAll();
+    public Page<Transaction> getAll(int limit, int offset) {
+        Pageable pageable = PageRequest.of(offset, limit);
+        return repository.findAll(pageable);
     }
 
     public Transaction getById(long id) {
@@ -37,7 +42,7 @@ public class TransactionService {
     }
 
     private void checksOnMakingAndEditingTransaction(Transaction transaction) throws Exception {
-        checkIfIbansExists(transaction.getAccountFrom(), transaction.getAccountTo());
+        checkIbans(transaction.getAccountFrom(), transaction.getAccountTo());
         checkAccountStatus(accountService.getByIban(transaction.getAccountFrom()), accountService.getByIban(transaction.getAccountTo()));
         checkAccountTypes(transaction.getAccountFrom(), transaction.getAccountTo());
         checkAmountsOnTransaction(transaction.getAccountFrom(), transaction.getAccountTo(), transaction.getAmount());
@@ -48,6 +53,7 @@ public class TransactionService {
         return repository.save(transaction);
     }
 
+    @Transactional
     public void delete(long id) {
         repository.archiveById(id);
     }
@@ -90,7 +96,6 @@ public class TransactionService {
         accountTo.setBalance(accountTo.getBalance() + amount);
         accountService.update(accountFrom, accountFrom.getId());
         accountService.update(accountTo, accountTo.getId());
-
     }
 
     private boolean checkAccountStatus(Account accountFrom, Account accountTo) throws Exception {
@@ -99,7 +104,7 @@ public class TransactionService {
         return true;
     }
 
-    private void checkIfIbansExists(String accountFrom, String accountTo) {
+    private void checkIbans(String accountFrom, String accountTo) {
         //check if iban is in valid format
         if (!isValidIbanFormat(accountFrom) || !isValidIbanFormat(accountTo))
             throw new IllegalArgumentException("Invalid IBAN");

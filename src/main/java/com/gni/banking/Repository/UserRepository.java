@@ -1,16 +1,16 @@
 package com.gni.banking.Repository;
 
-import com.gni.banking.Model.User;
 
-import com.gni.banking.Model.UserResponseDTO;
-import org.springframework.data.jpa.repository.Query;
+import com.gni.banking.Model.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
+import java.util.Optional;
 
-public interface UserRepository extends CrudRepository<User, Long> {
-	User findByFirstNameAndLastName(String firstName, String lastName);
-    // Add custom repository methods if needed
+@Repository
+public interface UserRepository extends CrudRepository<User,Long> {
+
+    Iterable<User> findByUserId(long userId);
+
 
 }
