@@ -29,6 +29,8 @@ public class User {
     private String lastName;
     private Role roles;
     private boolean active;
+    private double dayLimit;
+    private double transactionLimit;
     private int numberofaccounts;
 
 }

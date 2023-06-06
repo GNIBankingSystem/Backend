@@ -20,7 +20,7 @@ public class Account {
 
     private String id;
 
-    private int userId;
+    private long userId;
 
     private AccountType type;
 

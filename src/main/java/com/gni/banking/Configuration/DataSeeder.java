@@ -47,14 +47,14 @@ public class DataSeeder implements ApplicationRunner {
 
         User user2 = new User();
         user2.setId(2);
-        user2.setAccountCount(1);
+        user2.setNumberofaccounts(1);
         user2.setDayLimit(3000.00);
         user2.setEmail("pietervenema@gmail.com");
         user2.setFirstName("pieter");
         user2.setLastName("venema");
         user2.setPassword("Pieter123");
         user2.setPhoneNumber(612345678);
-        user2.setRole(Customer);
+        user2.setRoles(Customer);
         user2.setTransactionLimit(1000.00);
         userService.add(user2);
 

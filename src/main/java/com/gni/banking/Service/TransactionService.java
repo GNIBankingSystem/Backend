@@ -160,7 +160,7 @@ public class TransactionService {
     }
 
     public boolean underDayLimitWithIban(String iban, double amount){
-        int userId = accountService.getById(iban).getUserId();
+        int userId = (int) accountService.getById(iban).getUserId();
         return underDayLimit(userId, amount);
     }
 

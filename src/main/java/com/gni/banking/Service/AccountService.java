@@ -98,7 +98,7 @@ public class AccountService {
         List<User> Users =  userService.findByFirstNameAndLastName(firstname, lastName);
         List<Account> accounts = new ArrayList<>();
         Users.forEach(user -> {
-            List<Account> account = accountRepository.getIdByUserId(user.getId());
+            List<Account> account = accountRepository.getIdByUserId((int) user.getId());
             accounts.addAll(account);
         });
 

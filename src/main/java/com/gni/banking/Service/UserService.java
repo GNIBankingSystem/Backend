@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
-import com.gni.banking.Model.UserRequestDTO;
+
 
 
 @Service
@@ -21,7 +21,8 @@ public class UserService {
 
 
     public List<User> findByFirstNameAndLastName(String firstName, String lastName) {
-        return repository.findByFirstNameAndLastName(firstName, lastName);
+        return userRepository.findByFirstNameAndLastName(firstName, lastName);
+    }
 
     public List<User> getAll() {
         return (List<User>) userRepository.findAll();
@@ -38,7 +39,7 @@ public class UserService {
     }
 
     public double getDayLimitById(int userId){
-        return repository.getDayLimitById(userId);
+        return userRepository.getDayLimitById(userId);
     }
 
 
