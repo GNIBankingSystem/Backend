@@ -22,9 +22,10 @@ public class JwtTokenProvider {
     @Autowired
     private MyUserDetailsService myUserDetailsService;
 
-    public String createToken(String username, Role role) throws JwtException {
+    public String createToken(String username, Role role,long id) throws JwtException {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("auth", role);
+        claims.put("id",id);
         Date now = new Date();
         Date expiration = new Date(now.getTime() + 3600000);
         return Jwts.builder()
