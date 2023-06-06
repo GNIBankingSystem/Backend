@@ -19,8 +19,6 @@ public class AccountResponseDTO {
     @GeneratedValue
     private int id;
 
-    private String iban;
-
     private int userId;
 
     private AccountType type;

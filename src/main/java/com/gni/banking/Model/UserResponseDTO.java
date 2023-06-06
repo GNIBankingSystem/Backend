@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Table(name = "users")
 public class UserResponseDTO {
+
     @Id
-    @GeneratedValue
     private int id;
     private String firstname;
 

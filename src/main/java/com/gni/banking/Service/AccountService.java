@@ -1,23 +1,39 @@
 package com.gni.banking.Service;
+
 import com.gni.banking.Model.Account;
+import com.gni.banking.Model.User;
 import com.gni.banking.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccountService {
 
+
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private IbanService ibanService;
+
+    @Autowired
+    private UserService userService;
 
     public List<Account> getAll() {
         return (List<Account>) accountRepository.findAll();
     }
 
+
+    public Account getById(String id) {
+        return accountRepository.findById(id).orElseThrow();
+    }
+
     public Account getByIban(String iban) {
-        return (Account) accountRepository.findByIban(iban).orElse(null);
+        return (Account) accountRepository.findById(iban).orElse(null);
+
     }
 
     public List<Account> getAccountByUserId(long userId) throws Exception {
@@ -26,12 +42,17 @@ public class AccountService {
         } catch (Exception ex) {
             throw new Exception("Required fields missing");
         }
-
     }
 
     public Account add(Account a) {
+        if(a.getId() == null || a.getId().isEmpty()) {
+            a.setId(ibanService.GenerateIban());
+            String iban = ibanService.GenerateIban();
+            a.setId(iban);
+        }
         return accountRepository.save(a);
     }
+
 
     public Account update(Account account, String iban) throws Exception {
         Account existingAccount = getByIban(iban);
@@ -50,6 +71,10 @@ public class AccountService {
         }
     }
 
+    public void delete(String id) {
+        accountRepository.deleteById(id);
+    }
+
     public Account changeStatus(String iban) {
         Account existingAccount = getByIban(iban);
         if (existingAccount.getStatus().toString().equals("Open")) {
@@ -58,5 +83,18 @@ public class AccountService {
             existingAccount.setStatus(com.gni.banking.Enums.Status.Open);
         }
         return accountRepository.save(existingAccount);
+
+    }
+
+    public String getIbanByUserId(long userId) {
+        return accountRepository.getIdByUserId(userId);
+    }
+
+    public String getIbanByName(String name) {
+        String firstname = name.split("-")[0];
+        String lastName = name.split("-")[1];
+        User user =  userService.findByFirstNameAndLastName(firstname, lastName);
+        String iban = accountRepository.getIdByUserId(user.getId());
+        return iban;
     }
 }

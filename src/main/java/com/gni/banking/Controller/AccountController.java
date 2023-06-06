@@ -1,7 +1,10 @@
 package com.gni.banking.Controller;
 
+
+
 import com.gni.banking.Model.Account;
 import com.gni.banking.Service.AccountService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,10 +13,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/accounts")
@@ -21,7 +26,10 @@ public class AccountController {
     @Autowired
     private AccountService service;
 
+    private ModelMapper modelMapper;
+
     public AccountController() {
+
     }
 
     @GetMapping
@@ -29,11 +37,10 @@ public class AccountController {
         return service.getAll();
     }
 
-    @GetMapping("/{iban}")
-    public Account getAccountById(@PathVariable String iban) {
-        return service.getByIban(iban);
+    @GetMapping("/{id}")
+    public Account getAccountById(@PathVariable String id) {
+        return service.getById(id);
     }
-
 
     @PostMapping
     public ResponseEntity<Account> add(@RequestBody Account a) {
@@ -50,5 +57,10 @@ public class AccountController {
     public Account changeStatus(@PathVariable String iban) {
         //TODO implement this method
         return service.changeStatus(iban);
+    }
+
+    @GetMapping("/getIban/{name}")
+    public String getIbanByName(@PathVariable String name) throws Exception {
+        return service.getIbanByName(name);
     }
 }
