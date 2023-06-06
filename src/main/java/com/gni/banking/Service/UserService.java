@@ -1,12 +1,19 @@
 package com.gni.banking.Service;
 
-import com.gni.banking.Enums.Role;
-import com.gni.banking.Model.Account;
+import com.gni.banking.Configuration.Jwt.JwtTokenProvider;
+import com.gni.banking.Model.LoginRequestDTO;
+import com.gni.banking.Model.LoginResponseDTO;
 import com.gni.banking.Model.User;
 import com.gni.banking.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import java.util.Date;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import javax.naming.AuthenticationException;
 import java.util.List;
 
 
@@ -16,7 +23,10 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
 
 
@@ -81,6 +91,39 @@ public class UserService {
         return userRepository.save(existingUser);
 
 
+    }
+
+    public LoginResponseDTO login(LoginRequestDTO loginRequest) throws AuthenticationException {
+
+        // Get the user from the database
+        User user = userRepository.findUserByUsername(loginRequest.getUsername()).orElseThrow(() -> new AuthenticationException("User not found"));
+
+        // Check if the password hash matches
+        if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+
+            // Return a JWT to the client
+            LoginResponseDTO response = new LoginResponseDTO();
+            response.setToken(jwtTokenProvider.createToken(user.getUsername(), user.getRoles()));
+            return response;
+
+        } else {
+            throw new AuthenticationException("Invalid username/password");
+        }
+    }
+
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findUserByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException("No user found with username: " + username));
+
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRoles().name());
+
+        UserDetails userDetails = org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .authorities(authority)
+                .build();
+
+        return userDetails;
     }
 
 }
