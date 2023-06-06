@@ -16,7 +16,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<User,Long> {
 
-    Iterable<User> findByUserId(long userId);
+    Optional<User> findById(long userId);
 
 
 	@Query("SELECT dayLimit FROM User WHERE id = :userId")

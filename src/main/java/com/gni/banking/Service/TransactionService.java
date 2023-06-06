@@ -32,9 +32,16 @@ public class TransactionService {
     private UserService userService;
 
 
-    public Page<Transaction> getAll(int limit, int offset) {
+    public Page<Transaction> getAll(int limit, int offset, String iban) {
         Pageable pageable = PageRequest.of(offset, limit);
-        return repository.findAll(pageable);
+        if (Objects.equals(iban, "") || iban == null){
+            return repository.findAll(pageable);
+        }else{
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MONTH, -1);
+            Date cutoffDate = calendar.getTime();
+            return repository.findTransactionsByIban(iban, cutoffDate, pageable);
+        }
 
     }
 

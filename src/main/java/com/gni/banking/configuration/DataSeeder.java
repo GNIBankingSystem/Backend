@@ -32,18 +32,18 @@ public class DataSeeder implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        /*User user1 = new User();
+        User user1 = new User();
         user1.setId(1);
-        user1.setAccountCount(1);
+        user1.setNumberofaccounts(1);
         user1.setDayLimit(3000.00);
         user1.setEmail("PieterVenema@gmail.com");
         user1.setFirstName("pieter");
         user1.setLastName("venema");
         user1.setPassword("Pieter123");
         user1.setPhoneNumber(612345678);
-        user1.setRole(Customer);
+        user1.setRoles(Customer);
         user1.setTransactionLimit(1000.00);
-        userService.add(user1);*/
+        userService.add(user1);
 
         User user2 = new User();
         user2.setId(2);
@@ -76,7 +76,7 @@ public class DataSeeder implements ApplicationRunner {
         account1.setAbsoluteLimit(1000);
         account1.setCurrency(Currency.EUR);
         account1.setBalance(55);
-        account1.setStatus(Status.Closed);
+        account1.setStatus(Status.Open);
         accountService.add(account1);
 
         Account account2 = new Account();
@@ -99,26 +99,26 @@ public class DataSeeder implements ApplicationRunner {
         account3.setStatus(Status.Open);
         accountService.add(account3);
 
-//
-//        Transaction transaction1 = new Transaction();
-//        transaction1.setId(1);
-//        transaction1.setTimeStamp(new Date());
-//        transaction1.setAccountFrom("NL01INHO0000000001");
-//        transaction1.setAccountTo("NL01INHO456874318");
-//        transaction1.setAmount(50);
-//        transaction1.setPerformedBy(1);
-//        transaction1.setArchived(false);
-//        transactionService.add(transaction1);
-//
-//        Transaction transaction2 = new Transaction();
-//        transaction2.setId(2);
-//        transaction2.setTimeStamp(new Date());
-//        transaction2.setAccountFrom("NL01INHO456874318");
-//        transaction2.setAccountTo("NL01INHO0000000001");
-//        transaction2.setAmount(100);
-//        transaction2.setPerformedBy(2);
-//        transaction2.setArchived(false);
-//        transactionService.add(transaction2);
+
+        Transaction transaction1 = new Transaction();
+        transaction1.setId(1);
+        transaction1.setTimeStamp(new Date());
+        transaction1.setAccountFrom("NL01INHO0000000001");
+        transaction1.setAccountTo("NL01INHO456874318");
+        transaction1.setAmount(50);
+        transaction1.setPerformedBy(1);
+        transaction1.setArchived(false);
+        transactionService.add(transaction1);
+
+        Transaction transaction2 = new Transaction();
+        transaction2.setId(2);
+        transaction2.setTimeStamp(new Date());
+        transaction2.setAccountFrom("NL01INHO456874318");
+        transaction2.setAccountTo("NL01INHO0000000001");
+        transaction2.setAmount(100);
+        transaction2.setPerformedBy(2);
+        transaction2.setArchived(false);
+        transactionService.add(transaction2);
 
     }
 }
