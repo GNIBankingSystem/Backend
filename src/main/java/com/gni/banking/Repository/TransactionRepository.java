@@ -9,6 +9,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
@@ -32,5 +34,6 @@ public interface TransactionRepository extends CrudRepository<Transaction, Long>
     @Query("SELECT t FROM Transaction t WHERE t.archived = false AND t.id = ?1")
     Optional<Transaction> findById(long id);
 
-
+    @Query("SELECT t FROM Transaction t WHERE (t.accountFrom = :iban OR t.accountTo = :iban) AND t.timeStamp >= :cutoffDate ")
+    Page<Transaction> findTransactionsByIban(@Param("iban") String iban, @Param("cutoffDate") Date cutoffDate, Pageable pageable);
 }
