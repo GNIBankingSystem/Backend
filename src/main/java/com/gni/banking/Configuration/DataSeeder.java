@@ -32,7 +32,7 @@ public class DataSeeder implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        User user1 = new User();
+        /*User user1 = new User();
         user1.setId(1);
         user1.setAccountCount(1);
         user1.setDayLimit(3000.00);
@@ -43,7 +43,7 @@ public class DataSeeder implements ApplicationRunner {
         user1.setPhoneNumber(612345678);
         user1.setRole(Customer);
         user1.setTransactionLimit(1000.00);
-        userService.add(user1);
+        userService.add(user1);*/
 
         User user2 = new User();
         user2.setId(2);

@@ -1,33 +1,52 @@
 package com.gni.banking.Controller;
 
-import com.gni.banking.Model.User;
-import com.gni.banking.Model.UserRequestDTO;
+import com.gni.banking.Model.Account;
 import com.gni.banking.Service.UserService;
+import com.gni.banking.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
-    private final UserService userService;
-
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    private UserService userService;
+
+    public UserController() {
+
     }
 
-    @PostMapping("/users")
-    public ResponseEntity<User> createUser(@RequestBody UserRequestDTO userRequest) {
-        User createdUser = userService.createUser(userRequest);
-        return ResponseEntity.status(201).body(createdUser);
+    @GetMapping
+    public List<User> getAllUsers() {
+        return userService.getAll();
     }
 
-    // Implement other CRUD endpoints (e.g., getUser, updateUser, deleteUser) as needed
+    @GetMapping("/{userid}")
+    public User getUserById(@PathVariable long id) {
+        return userService.getById(id);
+    }
+
+    @PostMapping
+    public ResponseEntity<User> add(@RequestBody User a) {
+
+        return ResponseEntity.status(201).body(userService.add(a));
+    }
+
+    @PutMapping("/{userid}")
+    public User update(@RequestBody User user, @PathVariable long userid) throws Exception {
+        return userService.update(user, userid);
+    }
+
+    @DeleteMapping("/{userid}")
+    public User changeStatus(@PathVariable long userid) throws Exception {
+
+        return userService.changeStatus(userid);
+    }
+
+
+
+
+
 }

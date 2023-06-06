@@ -6,10 +6,14 @@ import com.gni.banking.Model.Account;
 import com.gni.banking.Model.User;
 import com.gni.banking.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -25,8 +29,16 @@ public class AccountService {
     @Autowired
     private UserService userService;
 
-    public List<Account> getAll() {
-        return (List<Account>) accountRepository.findAll();
+    public List<Account> getAll(int limit, int offset, String userId) throws Exception {
+        Pageable pageable = PageRequest.of(offset, limit);
+        if (Objects.equals(userId, "") || userId == null){
+            return accountRepository.findAll(pageable);
+        } else if (Objects.equals(userId, "1")) {
+            //TODO - make it so you get an error in insomnia because its a the bank account
+            return null;
+        } else{
+            return accountRepository.findByUserId(userId, pageable);
+        }
     }
 
 
@@ -37,14 +49,6 @@ public class AccountService {
     public Account getByIban(String iban) {
         return (Account) accountRepository.findById(iban).orElse(null);
 
-    }
-
-    public List<Account> getAccountByUserId(long userId) throws Exception {
-        try {
-            return (List<Account>) accountRepository.findByUserId(userId);
-        } catch (Exception ex) {
-            throw new Exception("Required fields missing");
-        }
     }
 
     public Account add(Account a) {
