@@ -45,7 +45,12 @@ public class UserService {
     }
 
     public User add(User a) {
-        return userRepository.save(a);
+        if (userRepository.findUserByUsername(a.getUsername()).isEmpty()) {
+            a.setPassword(passwordEncoder.encode(a.getPassword()));
+            return userRepository.save(a);
+        }
+        throw new IllegalArgumentException("Username is already taken");
+
     }
 
     public double getDayLimitById(int userId){
@@ -111,19 +116,5 @@ public class UserService {
         }
     }
 
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException("No user found with username: " + username));
-
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRoles().name());
-
-        UserDetails userDetails = org.springframework.security.core.userdetails.User
-                .withUsername(user.getUsername())
-                .password(user.getPassword())
-                .authorities(authority)
-                .build();
-
-        return userDetails;
-    }
 
 }

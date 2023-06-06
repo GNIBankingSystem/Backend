@@ -1,5 +1,6 @@
 package com.gni.banking.Configuration.Jwt;
 
+import com.gni.banking.Service.MyUserDetailsService;
 import com.gni.banking.Service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -19,7 +20,7 @@ public class JwtTokenProvider {
     @Autowired
     private JwtKeyProvider keyProvider;
     @Autowired
-    private UserService myUserDetailsService;
+    private MyUserDetailsService myUserDetailsService;
 
     public String createToken(String username, Role role) throws JwtException {
         Claims claims = Jwts.claims().setSubject(username);
