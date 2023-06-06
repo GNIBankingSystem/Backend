@@ -5,6 +5,8 @@ import com.gni.banking.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Date;
+import java.util.List;
+
 import com.gni.banking.Model.UserRequestDTO;
 
 @Service
@@ -14,7 +16,8 @@ public class UserService {
     private UserRepository repository;
 
 
-    public User findByFirstNameAndLastName(String firstName, String lastName) {
+
+    public List<User> findByFirstNameAndLastName(String firstName, String lastName) {
         return repository.findByFirstNameAndLastName(firstName, lastName);
     }
 
@@ -40,6 +43,15 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
+    public User add(User user) {
+        return repository.save(user);
+    }
+
+    public double getDayLimitById(int userId){
+        return repository.getDayLimitById(userId);
+    }
+
 
     // Implement other CRUD methods (e.g., getUser, updateUser, deleteUser) as needed
 }

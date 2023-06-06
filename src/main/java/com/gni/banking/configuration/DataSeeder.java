@@ -26,7 +26,6 @@ public class DataSeeder implements ApplicationRunner {
     AccountService accountService;
     @Autowired
     TransactionService transactionService;
-
     @Autowired
     UserService userService;
 
@@ -38,13 +37,26 @@ public class DataSeeder implements ApplicationRunner {
         user1.setAccountCount(1);
         user1.setDayLimit(3000.00);
         user1.setEmail("PieterVenema@gmail.com");
-        user1.setFirstName("Pieter");
-        user1.setLastName("Venema");
+        user1.setFirstName("pieter");
+        user1.setLastName("venema");
         user1.setPassword("Pieter123");
         user1.setPhoneNumber(612345678);
         user1.setRole(Customer);
         user1.setTransactionLimit(1000.00);
         userService.add(user1);
+
+        User user2 = new User();
+        user2.setId(2);
+        user2.setAccountCount(1);
+        user2.setDayLimit(3000.00);
+        user2.setEmail("pietervenema@gmail.com");
+        user2.setFirstName("pieter");
+        user2.setLastName("venema");
+        user2.setPassword("Pieter123");
+        user2.setPhoneNumber(612345678);
+        user2.setRole(Customer);
+        user2.setTransactionLimit(1000.00);
+        userService.add(user2);
 
 
         Account account = new Account();
@@ -59,13 +71,34 @@ public class DataSeeder implements ApplicationRunner {
 
         Account account1 = new Account();
         account1.setId("NL01INHO456874318");
-        account1.setUserId(2);
+        account1.setUserId(1);
         account1.setType(AccountType.Current);
         account1.setAbsoluteLimit(1000);
         account1.setCurrency(Currency.EUR);
         account1.setBalance(55);
-        account1.setStatus(Status.Open);
+        account1.setStatus(Status.Closed);
         accountService.add(account1);
+
+        Account account2 = new Account();
+        account2.setId("NL01INHO456874319");
+        account2.setUserId(2);
+        account2.setType(AccountType.Current);
+        account2.setAbsoluteLimit(1000);
+        account2.setCurrency(Currency.EUR);
+        account2.setBalance(55);
+        account2.setStatus(Status.Open);
+        accountService.add(account2);
+
+        Account account3 = new Account();
+        account3.setId("NL01INHO456874320");
+        account3.setUserId(2);
+        account3.setType(AccountType.Savings);
+        account3.setAbsoluteLimit(1000);
+        account3.setCurrency(Currency.EUR);
+        account3.setBalance(55);
+        account3.setStatus(Status.Open);
+        accountService.add(account3);
+
 //
 //        Transaction transaction1 = new Transaction();
 //        transaction1.setId(1);

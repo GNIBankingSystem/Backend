@@ -1,11 +1,14 @@
 package com.gni.banking.Service;
 
+import com.gni.banking.Enums.AccountType;
+import com.gni.banking.Enums.Status;
 import com.gni.banking.Model.Account;
 import com.gni.banking.Model.User;
 import com.gni.banking.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,16 +88,40 @@ public class AccountService {
         return accountRepository.save(existingAccount);
 
     }
+    public List<String> getIbanByName(String name) {
+        String firstname = name.split("_")[0];
+        String lastName = name.split("_")[1];
+        List<User> Users =  userService.findByFirstNameAndLastName(firstname, lastName);
+        List<Account> accounts = new ArrayList<>();
+        Users.forEach(user -> {
+            List<Account> account = accountRepository.getIdByUserId(user.getId());
+            accounts.addAll(account);
+        });
 
-    public String getIbanByUserId(long userId) {
-        return accountRepository.getIdByUserId(userId);
+        List<String> ibans = new ArrayList<>();
+        List<Account> usableAccounts = new ArrayList<>();
+        accounts.forEach(account -> {
+            if(account.getStatus() == com.gni.banking.Enums.Status.Open && account.getType() == com.gni.banking.Enums.AccountType.Current) {
+                usableAccounts.add(account);
+            }
+        });
+
+        usableAccounts.forEach(account -> {
+            ibans.add(account.getId());
+        });
+        return ibans;
     }
 
-    public String getIbanByName(String name) {
-        String firstname = name.split("-")[0];
-        String lastName = name.split("-")[1];
-        User user =  userService.findByFirstNameAndLastName(firstname, lastName);
-        String iban = accountRepository.getIdByUserId(user.getId());
-        return iban;
+    public List<Account> getCurrentAndOpenAccountsByUserId(int userId) {
+        return accountRepository.getCurrentAndOpenAccountsByUserId(userId, Status.Open, AccountType.Current);
+    }
+
+    public double totalBalance(int userId){
+        List<Account> accounts = accountRepository.getTotalBalanceOfAccounts(userId, Status.Open);
+        double total = 0;
+        for(Account account : accounts){
+            total += account.getBalance();
+        }
+        return total;
     }
 }

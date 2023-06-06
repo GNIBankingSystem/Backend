@@ -60,7 +60,7 @@ public class AccountController {
     }
 
     @GetMapping("/getIban/{name}")
-    public String getIbanByName(@PathVariable String name) throws Exception {
+    public List<String> getIbanByName(@PathVariable String name) throws Exception {
         return service.getIbanByName(name);
     }
 }

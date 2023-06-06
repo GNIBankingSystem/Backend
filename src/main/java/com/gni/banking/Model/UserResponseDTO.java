@@ -1,23 +1,20 @@
 package com.gni.banking.Model;
 import com.gni.banking.Enums.Role;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-@Entity
+
 @Data
 @RequiredArgsConstructor
-@Table(name = "users")
 public class UserResponseDTO {
 
     @Id
     private int id;
-    private String firstname;
 
-    private String lastname;
+    private String firstName;
+
+    private String lastName;
 
     private String email;
 
