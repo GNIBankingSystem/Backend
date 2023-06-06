@@ -1,11 +1,13 @@
 package com.gni.banking.Repository;
 
 import com.gni.banking.Model.Account;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,4 +24,5 @@ public interface AccountRepository extends CrudRepository<Account, String> {
 
     public String getIdByUserId(long userId);
 
+    List<Account> findAll(Pageable pageable);
 }

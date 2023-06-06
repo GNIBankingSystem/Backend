@@ -4,6 +4,8 @@ import com.gni.banking.Model.Account;
 import com.gni.banking.Model.User;
 import com.gni.banking.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +24,9 @@ public class AccountService {
     @Autowired
     private UserService userService;
 
-    public List<Account> getAll() {
-        return (List<Account>) accountRepository.findAll();
+    public List<Account> getAll(int limit, int offset) {
+        Pageable pageable = PageRequest.of(offset, limit);
+        return accountRepository.findAll(pageable);
     }
 
 
