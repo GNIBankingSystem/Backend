@@ -128,4 +128,8 @@ public class AccountService {
         }
         return total;
     }
+
+    public int getUserIdByIban(String iban) {
+        return accountRepository.getUserIdById(iban);
+    }
 }

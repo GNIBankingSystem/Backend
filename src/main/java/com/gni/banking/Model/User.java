@@ -32,5 +32,6 @@ public class User {
     private double dayLimit;
     private double transactionLimit;
     private int numberofaccounts;
+    private double dailyTransaction;
 
 }

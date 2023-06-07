@@ -1,5 +1,6 @@
 package com.gni.banking.Controller;
 
+import com.gni.banking.Enums.TransactionType;
 import com.gni.banking.Model.Transaction;
 import com.gni.banking.Model.TransactionRequestDTO;
 import com.gni.banking.Model.TransactionResponseDTO;
@@ -55,6 +56,7 @@ public class TransactionController {
     public ResponseEntity<?> add(@RequestBody TransactionRequestDTO transactionRequestDTO) {
         try {
             Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
+            transaction.setType(TransactionType.TRANSFER);
             Transaction addedTransaction = service.add(transaction);
             return ResponseEntity.ok(modelMapper.map(addedTransaction, TransactionResponseDTO.class));
         } catch (Exception e) {
@@ -80,6 +82,32 @@ public class TransactionController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id){
         service.delete(id);
+    }
+
+    @PostMapping("/withdraw")
+    public ResponseEntity<?> withdraw(@RequestBody TransactionRequestDTO transactionRequestDTO) {
+        try {
+            Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
+            transaction.setType(TransactionType.WITHDRAW);
+            Transaction addedTransaction = service.withdraw(transaction);
+            return ResponseEntity.ok(modelMapper.map(addedTransaction, TransactionResponseDTO.class));
+        } catch (Exception e) {
+            ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.BAD_REQUEST, e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/deposit")
+    public ResponseEntity<?> deposit(@RequestBody TransactionRequestDTO transactionRequestDTO) {
+        try {
+            Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
+            transaction.setType(TransactionType.DEPOSIT);
+            Transaction addedTransaction = service.deposit(transaction);
+            return ResponseEntity.ok(modelMapper.map(addedTransaction, TransactionResponseDTO.class));
+        } catch (Exception e) {
+            ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.BAD_REQUEST, e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

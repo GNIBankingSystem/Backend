@@ -65,6 +65,7 @@ public class TransactionService {
         transaction.setTimeStamp(new Date());
         //update balance on accounts
         updateBalanceOfAccounts(accountService.getByIban(transaction.getAccountFrom()), accountService.getByIban(transaction.getAccountTo()), transaction.getAmount());
+        //userService.updateDailyTransaction(transaction.getAccountFrom(), transaction.getAmount());
         return repository.save(transaction);
     }
 
@@ -203,5 +204,44 @@ public class TransactionService {
         return totalAmountTransferred;
     }
 
+    public Transaction deposit(Transaction transaction) throws Exception {
+
+        transaction.setTimeStamp(new Date());
+        validDeposit(transaction);
+        checksOnMakingAndEditingTransaction(transaction);
+
+        //update balance on accounts
+        updateBalanceOfAccounts(accountService.getByIban(transaction.getAccountFrom()), accountService.getByIban(transaction.getAccountTo()), transaction.getAmount());
+        return repository.save(transaction);
+    }
+
+    public Transaction withdraw(Transaction transaction) throws Exception{
+        transaction.setTimeStamp(new Date());
+        validWithdraw(transaction);
+        checksOnMakingAndEditingTransaction(transaction);
+
+        //update balance on accounts
+        updateBalanceOfAccounts(accountService.getByIban(transaction.getAccountFrom()), accountService.getByIban(transaction.getAccountTo()), transaction.getAmount());
+        return repository.save(transaction);
+    }
+
+    public boolean validDeposit(Transaction transaction) throws Exception{
+        String bankIban = "NL01INHO0000000001";
+        if(Objects.equals(transaction.getAccountFrom(), bankIban)){
+            return true;
+        }else{
+            throw new Exception("You can only deposit money to the bank");
+        }
+
+    }
+
+    public boolean validWithdraw(Transaction transaction) throws Exception{
+        String bankIban  = "NL01INHO0000000001";
+        if(Objects.equals(transaction.getAccountTo(), bankIban)){
+            return true;
+        }else{
+            throw new Exception("You can only withdraw money from the bank");
+        }
+    }
 }
 

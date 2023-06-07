@@ -23,6 +23,11 @@ public class UserController {
         return userService.getAll();
     }
 
+    @GetMapping("/noAccounts")
+    public List<User> getAllUsersWithoutAccount() {
+        return userService.findUsersWithoutAccount();
+    }
+
     @GetMapping("/{userId}")
     public User getUserById(@PathVariable long userId) {
         return userService.getById(userId);

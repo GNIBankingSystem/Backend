@@ -43,6 +43,7 @@ public class DataSeeder implements ApplicationRunner {
         user1.setPhoneNumber(612345678);
         user1.setRoles(Customer);
         user1.setTransactionLimit(1000.00);
+        user1.setDailyTransaction(0);
         userService.add(user1);
 
         User user2 = new User();
@@ -56,6 +57,7 @@ public class DataSeeder implements ApplicationRunner {
         user2.setPhoneNumber(612345678);
         user2.setRoles(Customer);
         user2.setTransactionLimit(1000.00);
+        user2.setDailyTransaction(0);
         userService.add(user2);
 
 

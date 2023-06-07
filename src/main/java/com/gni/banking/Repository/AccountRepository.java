@@ -37,4 +37,6 @@ public interface AccountRepository extends CrudRepository<Account, String> {
 
     List<Account> findByUserId(String userId, Pageable pageable);
 
+    @Query("SELECT userId FROM Account WHERE id = :iban")
+    int getUserIdById(@Param("iban")String iban);
 }

@@ -3,6 +3,7 @@ package com.gni.banking.Service;
 import com.gni.banking.Enums.Role;
 import com.gni.banking.Model.Account;
 import com.gni.banking.Model.User;
+import com.gni.banking.Repository.AccountRepository;
 import com.gni.banking.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private AccountRepository accountRepository ;
+
 
 
 
@@ -25,6 +29,7 @@ public class UserService {
     }
 
     public List<User> getAll() {
+        //checken op paramaters
         return (List<User>) userRepository.findAll();
     }
 
@@ -79,8 +84,19 @@ public class UserService {
             throw new Exception("Cannot find User with that id");
         }
         return userRepository.save(existingUser);
-
-
     }
+
+    public List<User> findUsersWithoutAccount() {
+    	return userRepository.findUsersWithoutAccount();
+    }
+
+    /*public void updateDailyTransaction(String accountFrom, double amount){
+
+        //get user die bij account hoort -->
+        int userId = accountRepository.getUserIdById(accountFrom);
+        double currentDailyTransaction = userRepository.getDailyTransaction(userId);
+        double newDailyTransaction = currentDailyTransaction + amount;
+        userRepository.updateDailyTransaction(userId, newDailyTransaction);
+    }*/
 
 }

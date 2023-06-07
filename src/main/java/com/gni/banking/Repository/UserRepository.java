@@ -2,6 +2,7 @@ package com.gni.banking.Repository;
 
 
 import com.gni.banking.Model.User;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -25,6 +26,13 @@ public interface UserRepository extends CrudRepository<User,Long> {
 	List<User> findByFirstNameAndLastName(String firstName, String lastName);
     // Add custom repository methods if needed
 
-	
+	@Query("SELECT u FROM User u WHERE u.numberofaccounts = 0")
+	List<User> findUsersWithoutAccount();
 
+	@Query("SELECT dailyTransaction FROM User WHERE id = :userId")
+	double getDailyTransaction(@Param("userId") int userId);
+
+	/*@Query("UPDATE User SET dailyTransaction = :newDailyTransaction WHERE id = :userId")
+	@Modifying
+	void updateDailyTransaction(@Param("userId")int userId, @Param("newDailyTransaction") double newDailyTransaction);*/
 }

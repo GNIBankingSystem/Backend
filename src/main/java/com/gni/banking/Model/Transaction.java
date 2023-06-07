@@ -1,5 +1,6 @@
 package com.gni.banking.Model;
 
+import com.gni.banking.Enums.TransactionType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -21,4 +22,5 @@ public class Transaction {
         private double amount;
         private long performedBy;
         private boolean archived;
+        private TransactionType type;
 }
