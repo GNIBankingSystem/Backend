@@ -37,6 +37,7 @@ public class DataSeeder implements ApplicationRunner {
         user1.setNumberofaccounts(1);
         user1.setDayLimit(3000.00);
         user1.setEmail("PieterVenema@gmail.com");
+        user1.setUsername("PieterVenema");
         user1.setFirstName("pieter");
         user1.setLastName("venema");
         user1.setPassword("Pieter123");
@@ -51,6 +52,7 @@ public class DataSeeder implements ApplicationRunner {
         user2.setNumberofaccounts(1);
         user2.setDayLimit(3000.00);
         user2.setEmail("pietervenema@gmail.com");
+        user2.setUsername("pietervenema");
         user2.setFirstName("pieter");
         user2.setLastName("venema");
         user2.setPassword("Pieter123");

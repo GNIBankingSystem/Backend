@@ -1,13 +1,20 @@
 package com.gni.banking.Service;
 
-import com.gni.banking.Enums.Role;
-import com.gni.banking.Model.Account;
+import com.gni.banking.Configuration.Jwt.JwtTokenProvider;
+import com.gni.banking.Model.LoginRequestDTO;
+import com.gni.banking.Model.LoginResponseDTO;
 import com.gni.banking.Model.User;
 import com.gni.banking.Repository.AccountRepository;
 import com.gni.banking.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import java.util.Date;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import javax.naming.AuthenticationException;
 import java.util.List;
 
 
@@ -18,8 +25,15 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+
     @Autowired
     private AccountRepository accountRepository ;
+
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
 
 
@@ -40,7 +54,12 @@ public class UserService {
     }
 
     public User add(User a) {
-        return userRepository.save(a);
+        if (userRepository.findUserByUsername(a.getUsername()).isEmpty()) {
+            a.setPassword(passwordEncoder.encode(a.getPassword()));
+            return userRepository.save(a);
+        }
+        throw new IllegalArgumentException("Username is already taken");
+
     }
 
     public double getDayLimitById(int userId){
@@ -86,6 +105,7 @@ public class UserService {
         return userRepository.save(existingUser);
     }
 
+
     public List<User> findUsersWithoutAccount() {
     	return userRepository.findUsersWithoutAccount();
     }
@@ -98,5 +118,25 @@ public class UserService {
         double newDailyTransaction = currentDailyTransaction + amount;
         userRepository.updateDailyTransaction(userId, newDailyTransaction);
     }*/
+
+    public LoginResponseDTO login(LoginRequestDTO loginRequest) throws AuthenticationException {
+
+        // Get the user from the database
+        User user = userRepository.findUserByUsername(loginRequest.getUsername()).orElseThrow(() -> new AuthenticationException("User not found"));
+
+        // Check if the password hash matches
+        if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+
+            // Return a JWT to the client
+            LoginResponseDTO response = new LoginResponseDTO();
+            response.setToken(jwtTokenProvider.createToken(user.getUsername(), user.getRoles(),user.getId()));
+            return response;
+
+        } else {
+            throw new AuthenticationException("Invalid username/password");
+        }
+    }
+
+
 
 }

@@ -17,7 +17,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<User,Long> {
 
-    Optional<User> findById(long userId);
+    Optional<User> findById(long id);
 
 
 	@Query("SELECT dayLimit FROM User WHERE id = :userId")
@@ -35,4 +35,7 @@ public interface UserRepository extends CrudRepository<User,Long> {
 	/*@Query("UPDATE User SET dailyTransaction = :newDailyTransaction WHERE id = :userId")
 	@Modifying
 	void updateDailyTransaction(@Param("userId")int userId, @Param("newDailyTransaction") double newDailyTransaction);*/
+
+	Optional<User> findUserByUsername(String username);
+
 }

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/transactions")
 
 public class TransactionController {
@@ -31,9 +32,9 @@ public class TransactionController {
     }
 
     @GetMapping
-    public List<TransactionResponseDTO> getAll(@RequestParam(defaultValue = "0") int offset, @RequestParam(defaultValue = "10") int limit) {
+    public List<TransactionResponseDTO> getAll(@RequestParam(defaultValue = "0") int offset, @RequestParam(defaultValue = "10") int limit, @RequestParam(required = false) String iban) {
         int page = offset / limit;
-        Page<Transaction> transactions = service.getAll(limit, page);
+        Page<Transaction> transactions = service.getAll(limit, page, iban);
         return transactions.getContent().stream()
                 .map(transaction -> modelMapper.map(transaction, TransactionResponseDTO.class))
                 .collect(Collectors.toList());
