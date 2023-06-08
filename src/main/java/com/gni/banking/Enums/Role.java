@@ -1,8 +1,8 @@
 package com.gni.banking.Enums;
 
 public enum Role {
-    Customer,
-    Employee,
-    Admin
+    ROLE_CUSTOMER,
+    ROLE_EMPLOYEE,
+    ROLE_ADMIN
 }
 

@@ -16,7 +16,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-import static com.gni.banking.Enums.Role.Customer;
+import static com.gni.banking.Enums.Role.ROLE_ADMIN;
+import static com.gni.banking.Enums.Role.ROLE_CUSTOMER;
 
 @Component
 public class DataSeeder implements ApplicationRunner {
@@ -36,12 +37,12 @@ public class DataSeeder implements ApplicationRunner {
         user1.setNumberofaccounts(1);
         user1.setDayLimit(3000.00);
         user1.setEmail("PieterVenema@gmail.com");
-        user1.setUsername("username");
+        user1.setUsername("admin");
         user1.setFirstName("pieter");
         user1.setLastName("venema");
-        user1.setPassword("password");
+        user1.setPassword("admin");
         user1.setPhoneNumber(612345678);
-        user1.setRoles(Customer);
+        user1.setRoles(ROLE_ADMIN);
         user1.setTransactionLimit(1000.00);
         user1.setDailyTransaction(0);
         userService.add(user1);
@@ -51,12 +52,12 @@ public class DataSeeder implements ApplicationRunner {
         user2.setNumberofaccounts(1);
         user2.setDayLimit(3000.00);
         user2.setEmail("pietervenema@gmail.com");
-        user2.setUsername("pietervenema");
+        user2.setUsername("customer");
         user2.setFirstName("pieter");
         user2.setLastName("venema");
-        user2.setPassword("Pieter123");
+        user2.setPassword("customer");
         user2.setPhoneNumber(612345678);
-        user2.setRoles(Customer);
+        user2.setRoles(ROLE_CUSTOMER);
         user2.setTransactionLimit(1000.00);
         user2.setDailyTransaction(0);
         userService.add(user2);
