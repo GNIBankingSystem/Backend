@@ -250,5 +250,9 @@ public class TransactionService {
             throw new Exception("You can only withdraw money from the bank");
         }
     }
+
+    public List<Transaction> getTransactionsByUserId(long id) {
+        return repository.getTransactionsByPerformedBy(id);
+    }
 }
 

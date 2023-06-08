@@ -1,10 +1,12 @@
 package com.gni.banking.Controller;
 
+import com.gni.banking.Configuration.Jwt.JwtTokenDecoder;
 import com.gni.banking.Enums.TransactionType;
 import com.gni.banking.Model.Transaction;
 import com.gni.banking.Model.TransactionRequestDTO;
 import com.gni.banking.Model.TransactionResponseDTO;
 import com.gni.banking.Service.TransactionService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,8 @@ import java.util.stream.Collectors;
 public class TransactionController {
     @Autowired
     private TransactionService service;
+    @Autowired
+    private JwtTokenDecoder jwtTokenDecoder;
     private ModelMapper modelMapper;
     public TransactionController() {
         this.service = new TransactionService();
@@ -54,10 +58,11 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody TransactionRequestDTO transactionRequestDTO) {
+    public ResponseEntity<?> add(@RequestBody TransactionRequestDTO transactionRequestDTO, HttpServletRequest request) {
         try {
             Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
             transaction.setType(TransactionType.TRANSFER);
+            transaction.setPerformedBy(jwtTokenDecoder.getIdInToken(request));
             Transaction addedTransaction = service.add(transaction);
             return ResponseEntity.ok(modelMapper.map(addedTransaction, TransactionResponseDTO.class));
         } catch (Exception e) {

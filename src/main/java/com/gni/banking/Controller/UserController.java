@@ -1,6 +1,7 @@
 package com.gni.banking.Controller;
 
 import com.gni.banking.Model.Account;
+import com.gni.banking.Service.TransactionService;
 import com.gni.banking.Service.UserService;
 import com.gni.banking.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private TransactionService transactionService;
 
     public UserController() {
 
@@ -51,6 +54,16 @@ public class UserController {
         return userService.changeStatus(userid);
     }
 
+
+    @GetMapping("/{id}/transactions")
+    public ResponseEntity<?> getTransactionsByUserId(@PathVariable long id)
+    {
+        try {
+            return new ResponseEntity<>(transactionService.getTransactionsByUserId(id), null, 200);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), null, 401);
+        }
+    }
 
 
 

@@ -36,4 +36,7 @@ public interface TransactionRepository extends CrudRepository<Transaction, Long>
 
     @Query("SELECT t FROM Transaction t WHERE (t.accountFrom = :iban OR t.accountTo = :iban) AND t.timeStamp >= :cutoffDate ")
     Page<Transaction> findTransactionsByIban(@Param("iban") String iban, @Param("cutoffDate") Date cutoffDate, Pageable pageable);
+
+    @Query("SELECT t FROM Transaction t WHERE t.performedBy = ?1 AND t.archived = false")
+    List<Transaction> getTransactionsByPerformedBy(long id);
 }
