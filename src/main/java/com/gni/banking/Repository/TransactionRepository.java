@@ -28,15 +28,15 @@ public interface TransactionRepository extends CrudRepository<Transaction, Long>
     Page<Transaction> findAll(Pageable pageable);
 
 
-    @Query("SELECT t.amount FROM Transaction t WHERE t.accountFrom = :iban AND t.timeStamp >= :beginDate AND t.timeStamp <= :endDate")
+    @Query("SELECT t.amount FROM Transaction t WHERE t.accountFrom = :iban AND t.timestamp >= :beginDate AND t.timestamp <= :endDate")
     List<Double> todaysTransactionOfUser(@Param("iban") String iban, @Param("beginDate") Date beginDate, @Param("endDate") Date endDate);
 
     @Query("SELECT t FROM Transaction t WHERE t.archived = false AND t.id = ?1")
     Optional<Transaction> findById(long id);
 
-    @Query("SELECT t FROM Transaction t WHERE (t.accountFrom = :iban OR t.accountTo = :iban) AND t.timeStamp >= :cutoffDate ")
+    @Query("SELECT t FROM Transaction t WHERE (t.accountFrom = :iban OR t.accountTo = :iban) AND t.timestamp >= :cutoffDate ")
     Page<Transaction> findTransactionsByIban(@Param("iban") String iban, @Param("cutoffDate") Date cutoffDate, Pageable pageable);
 
     @Query("SELECT t FROM Transaction t WHERE t.performedBy = ?1 AND t.archived = false")
     List<Transaction> getTransactionsByPerformedBy(long id);
-}
+    }

@@ -1,7 +1,6 @@
 package com.gni.banking.Service;
 
 import com.gni.banking.Enums.AccountType;
-import com.gni.banking.Enums.Role;
 import com.gni.banking.Enums.Status;
 import com.gni.banking.Model.Account;
 import com.gni.banking.Model.Transaction;
@@ -13,9 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -26,7 +22,8 @@ public class TransactionService {
     private TransactionRepository repository;
     @Autowired
     private AccountService accountService;
-
+    @Autowired
+    private TransactionFilterService transactionFilterService;
 
     @Autowired
     private UserService userService;
@@ -69,7 +66,7 @@ public class TransactionService {
             }
         }*/
         checksOnMakingAndEditingTransaction(transaction);
-        transaction.setTimeStamp(new Date());
+        transaction.setTimestamp(new Date());
         //update balance on accounts
         updateBalanceOfAccounts(accountService.getByIban(transaction.getAccountFrom()), accountService.getByIban(transaction.getAccountTo()), transaction.getAmount());
         //userService.updateDailyTransaction(transaction.getAccountFrom(), transaction.getAmount());
@@ -213,7 +210,7 @@ public class TransactionService {
 
     public Transaction deposit(Transaction transaction) throws Exception {
 
-        transaction.setTimeStamp(new Date());
+        transaction.setTimestamp(new Date());
         validDeposit(transaction);
         checksOnMakingAndEditingTransaction(transaction);
 
@@ -223,7 +220,7 @@ public class TransactionService {
     }
 
     public Transaction withdraw(Transaction transaction) throws Exception{
-        transaction.setTimeStamp(new Date());
+        transaction.setTimestamp(new Date());
         validWithdraw(transaction);
         checksOnMakingAndEditingTransaction(transaction);
 
@@ -251,8 +248,12 @@ public class TransactionService {
         }
     }
 
-    public List<Transaction> getTransactionsByUserId(long id) {
-        return repository.getTransactionsByPerformedBy(id);
+    public List<Transaction> getTransactionsByUserId(long id,Date startDate,Date endDate,String ibanTo, String comparisonOperator, Double balance) {
+        //gets all without filter
+        if(startDate == null && endDate == null && ibanTo == null && comparisonOperator == null && balance == null){
+            return repository.getTransactionsByPerformedBy(id);
+        }
+        return transactionFilterService.getTransactionByPerformedByWithFilter(id,startDate,endDate,ibanTo,comparisonOperator,balance);
     }
 }
 

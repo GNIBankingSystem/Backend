@@ -16,7 +16,7 @@ public class Transaction {
         @Id
         @GeneratedValue
         private int id;
-        private Date timeStamp;
+        private Date timestamp;
         private String accountFrom;
         private String accountTo;
         private double amount;
