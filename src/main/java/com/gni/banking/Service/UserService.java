@@ -131,6 +131,7 @@ public class UserService {
             LoginResponseDTO response = new LoginResponseDTO();
             response.setToken(jwtTokenProvider.createToken(user.getUsername(), user.getRoles(),user.getId()));
             response.setUsername(user.getUsername());
+            response.setId(user.getId());
             return response;
 
         } else {

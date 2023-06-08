@@ -6,4 +6,5 @@ import lombok.Data;
 public class LoginResponseDTO {
     private String username;
     private String token;
+    private long id;
 }
