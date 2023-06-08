@@ -29,9 +29,12 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity.csrf().disable();
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        httpSecurity.authorizeHttpRequests().requestMatchers("/login").permitAll()
-                .requestMatchers("/transactions").authenticated();
+        httpSecurity.authorizeHttpRequests()
+                .requestMatchers("/login").permitAll()
+                .requestMatchers("/transactions").authenticated()
+                .anyRequest().authenticated();
         httpSecurity.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.cors(customizer -> customizer.configurationSource(corsConfigurationSource()));
         return httpSecurity.build();
     }
 
