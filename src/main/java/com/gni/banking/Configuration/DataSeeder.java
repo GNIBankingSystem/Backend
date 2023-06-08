@@ -79,7 +79,7 @@ public class DataSeeder implements ApplicationRunner {
         account1.setType(AccountType.Current);
         account1.setAbsoluteLimit(1000);
         account1.setCurrency(Currency.EUR);
-        account1.setBalance(55);
+        account1.setBalance(55.20);
         account1.setStatus(Status.Open);
         accountService.add(account1);
 
@@ -89,7 +89,7 @@ public class DataSeeder implements ApplicationRunner {
         account2.setType(AccountType.Current);
         account2.setAbsoluteLimit(1000);
         account2.setCurrency(Currency.EUR);
-        account2.setBalance(55);
+        account2.setBalance(55.22);
         account2.setStatus(Status.Open);
         accountService.add(account2);
 
