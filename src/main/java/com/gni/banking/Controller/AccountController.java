@@ -38,8 +38,10 @@ public class AccountController {
     @GetMapping
     public List<Account> getAllAccounts(@RequestParam(defaultValue = "0") int offset,
                                         @RequestParam(defaultValue = "10") int limit,
-                                        @RequestParam(required = false) String userId) throws Exception {
-        return service.getAll(limit, offset, userId);
+                                        @RequestParam(required = false) String userId,
+                                        @RequestParam(required = false) String type,
+                                        @RequestParam(required = false) String status) throws Exception {
+        return service.getAll(limit, offset, userId, type, status);
     }
 
     @GetMapping("/{id}")

@@ -29,16 +29,65 @@ public class AccountService {
     @Autowired
     private UserService userService;
 
-    public List<Account> getAll(int limit, int offset, String userId) throws Exception {
+    public List<Account> getAll(int limit, int offset, String userId, String type, String status) throws Exception {
+        //initialize variables
         Pageable pageable = PageRequest.of(offset, limit);
-        if (Objects.equals(userId, "") || userId == null){
-            return accountRepository.findAll(pageable);
-        } else if (Objects.equals(userId, "1")) {
+        AccountType accountType = getAccountType(type);
+        Status accountStatus = getStatus(status);
+
+        //check for parameters and return the correct list
+        if (userId != null && accountType != null && accountStatus != null)
+            return accountRepository.findByUserIdAndTypeAndStatus(userId, accountType, accountStatus, pageable);
+
+        if (userId != null && accountType != null)
+            return accountRepository.findByUserIdAndType(userId, accountType, pageable);
+
+        if (userId != null && accountStatus != null)
+            return accountRepository.findByUserIdAndStatus(userId, accountStatus, pageable);
+
+        if (accountType != null && accountStatus != null)
+            return accountRepository.findByTypeAndStatus(accountType, accountStatus, pageable);
+
+        if (accountStatus != null)
+            return accountRepository.findByStatus(accountStatus, pageable);
+
+        if (userId != null)
+            return accountRepository.findByUserId(userId, pageable);
+
+        if (accountType != null)
+            return accountRepository.findByType(accountType, pageable);
+
+        if (Objects.equals(userId, "1")) {
             //TODO - make it so you get an error in insomnia because its a the bank account
             return null;
-        } else{
-            return accountRepository.findByUserId(userId, pageable);
         }
+
+        return accountRepository.findAll(pageable);
+    }
+
+    private static Status getStatus(String status) throws Exception {
+        Status accountStatus = null;
+        if (status != null){
+            switch (status.toLowerCase()) {
+                case "open" -> accountStatus = Status.Open;
+                case "closed" -> accountStatus = Status.Closed;
+                default -> accountStatus = null;
+            }
+        }
+        return accountStatus;
+    }
+
+    private static AccountType getAccountType(String type) throws Exception {
+        AccountType accountType = null;
+        //fill variables if necessary
+        if (type != null){
+            switch (type.toLowerCase()) {
+                case "current" -> accountType = AccountType.Current;
+                case "savings" -> accountType = AccountType.Savings;
+                default -> accountType = null;
+            }
+        }
+        return accountType;
     }
 
 

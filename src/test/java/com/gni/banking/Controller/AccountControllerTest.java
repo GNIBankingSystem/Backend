@@ -56,7 +56,7 @@ public class AccountControllerTest {
         // Mockito allows us to 'inject' return values for methods we call
         // This way, we don't actually test the service, just the controller
         when(service
-                .getAll(0, 10, null))
+                .getAll(0, 10, null, null, null))
                 .thenReturn(List.of(
                         new Account("Nl01INHO000000032133", 1, AccountType.Current, 1000.0, Currency.EUR, 200.0, Status.Open)));
 
