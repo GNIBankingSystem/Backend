@@ -64,52 +64,43 @@ public class DataSeeder implements ApplicationRunner {
         userService.add(user2);
 
 
-        Account account = new Account();
-        account.setId("NL01INHO0000000001");
+/*        AccountRequestDTO account = new AccountRequestDTO();
         account.setUserId(1);
         account.setType(AccountType.Current);
-        account.setAbsoluteLimit(1000);
-        account.setCurrency(Currency.EUR);
-        account.setBalance(550000000);
-        account.setStatus(Status.Open);
-        accountService.add(account);
+        Account acc = accountService.add(account);
+        acc.setAbsoluteLimit(1000);
+        acc.setCurrency(Currency.EUR);
+        acc.setBalance(550000000);
+        acc.setStatus(Status.Open);
+        acc.setId("NL01INHO0000000001");
+        accountService.update(acc, "NL01INHO0000000001");*/
 
-        Account account1 = new Account();
-        account1.setId("NL01INHO456874318");
+
+        AccountRequestDTO account1 = new AccountRequestDTO();
         account1.setUserId(1);
-        account1.setType(AccountType.Current);
-        account1.setAbsoluteLimit(1000);
-        account1.setCurrency(Currency.EUR);
-        account1.setBalance(55.20);
-        account1.setStatus(Status.Open);
+        account1.setType(AccountType.Savings);
         accountService.add(account1);
 
-        Account account2 = new Account();
-        account2.setId("NL01INHO456874319");
+        AccountRequestDTO account2 = new AccountRequestDTO();
         account2.setUserId(2);
         account2.setType(AccountType.Current);
-        account2.setAbsoluteLimit(1000);
-        account2.setCurrency(Currency.EUR);
-        account2.setBalance(55.22);
-        account2.setStatus(Status.Open);
         accountService.add(account2);
 
-        Account account3 = new Account();
-        account3.setId("NL01INHO456874320");
-        account3.setUserId(2);
-        account3.setType(AccountType.Savings);
-        account3.setAbsoluteLimit(1000);
-        account3.setCurrency(Currency.EUR);
-        account3.setBalance(55);
-        account3.setStatus(Status.Open);
+        AccountRequestDTO account3 = new AccountRequestDTO();
+        account2.setUserId(3);
+        account2.setType(AccountType.Current);
         accountService.add(account3);
 
+        AccountRequestDTO account4 = new AccountRequestDTO();
+        account2.setUserId(3);
+        account2.setType(AccountType.Savings);
+        accountService.add(account4);
 
-        Transaction transaction1 = new Transaction();
+        /*Transaction transaction1 = new Transaction();
         transaction1.setId(1);
         transaction1.setTimeStamp(new Date());
         transaction1.setAccountFrom("NL01INHO0000000001");
-        transaction1.setAccountTo("NL01INHO456874318");
+        transaction1.setAccountTo("NL01INHO45687431812");
         transaction1.setAmount(50);
         transaction1.setPerformedBy(1);
         transaction1.setArchived(false);
@@ -118,12 +109,12 @@ public class DataSeeder implements ApplicationRunner {
         Transaction transaction2 = new Transaction();
         transaction2.setId(2);
         transaction2.setTimeStamp(new Date());
-        transaction2.setAccountFrom("NL01INHO456874318");
+        transaction2.setAccountFrom("NL01INHO45687431812");
         transaction2.setAccountTo("NL01INHO0000000001");
         transaction2.setAmount(100);
         transaction2.setPerformedBy(2);
         transaction2.setArchived(false);
-        transactionService.add(transaction2);
+        transactionService.add(transaction2);*/
 
     }
 }

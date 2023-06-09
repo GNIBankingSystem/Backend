@@ -1,8 +1,10 @@
 package com.gni.banking.Service;
 
 import com.gni.banking.Enums.AccountType;
+import com.gni.banking.Enums.Currency;
 import com.gni.banking.Enums.Status;
 import com.gni.banking.Model.Account;
+import com.gni.banking.Model.AccountRequestDTO;
 import com.gni.banking.Model.User;
 import com.gni.banking.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +69,7 @@ public class AccountService {
 
     private static Status getStatus(String status) throws Exception {
         Status accountStatus = null;
-        if (status != null){
+        if (status != null) {
             switch (status.toLowerCase()) {
                 case "open" -> accountStatus = Status.Open;
                 case "closed" -> accountStatus = Status.Closed;
@@ -80,7 +82,7 @@ public class AccountService {
     private static AccountType getAccountType(String type) throws Exception {
         AccountType accountType = null;
         //fill variables if necessary
-        if (type != null){
+        if (type != null) {
             switch (type.toLowerCase()) {
                 case "current" -> accountType = AccountType.Current;
                 case "savings" -> accountType = AccountType.Savings;
@@ -100,12 +102,18 @@ public class AccountService {
 
     }
 
-    public Account add(Account a) {
-        if(a.getId() == null || a.getId().isEmpty()) {
-            a.setId(ibanService.GenerateIban());
-            String iban = ibanService.GenerateIban();
-            a.setId(iban);
-        }
+    public Account add(AccountRequestDTO accountRequest) {
+        Account a = new Account();
+        a.setId(ibanService.GenerateIban());
+        String iban = ibanService.GenerateIban();
+        a.setId(iban);
+        a.setUserId(accountRequest.getUserId());
+        a.setType(accountRequest.getType());
+        a.setAbsoluteLimit(1000.00);
+        a.setCurrency(Currency.EUR);
+        a.setBalance(0.00);
+        a.setStatus(Status.Open);
+
         return accountRepository.save(a);
     }
 
@@ -141,10 +149,11 @@ public class AccountService {
         return accountRepository.save(existingAccount);
 
     }
+
     public List<String> getIbanByName(String name) {
         String firstname = name.split("_")[0];
         String lastName = name.split("_")[1];
-        List<User> Users =  userService.findByFirstNameAndLastName(firstname, lastName);
+        List<User> Users = userService.findByFirstNameAndLastName(firstname, lastName);
         List<Account> accounts = new ArrayList<>();
         Users.forEach(user -> {
             List<Account> account = accountRepository.getIdByUserId((int) user.getId());
@@ -154,7 +163,7 @@ public class AccountService {
         List<String> ibans = new ArrayList<>();
         List<Account> usableAccounts = new ArrayList<>();
         accounts.forEach(account -> {
-            if(account.getStatus() == com.gni.banking.Enums.Status.Open && account.getType() == com.gni.banking.Enums.AccountType.Current) {
+            if (account.getStatus() == com.gni.banking.Enums.Status.Open && account.getType() == com.gni.banking.Enums.AccountType.Current) {
                 usableAccounts.add(account);
             }
         });
@@ -169,10 +178,10 @@ public class AccountService {
         return accountRepository.getCurrentAndOpenAccountsByUserId(userId, Status.Open, AccountType.Current);
     }
 
-    public double totalBalance(int userId){
+    public double totalBalance(int userId) {
         List<Account> accounts = accountRepository.getTotalBalanceOfAccounts(userId, Status.Open);
         double total = 0;
-        for(Account account : accounts){
+        for (Account account : accounts) {
             total += account.getBalance();
         }
         return total;
