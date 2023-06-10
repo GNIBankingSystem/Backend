@@ -3,7 +3,8 @@ package com.gni.banking.Controller;
 
 
 import com.gni.banking.Model.Account;
-import com.gni.banking.Model.AccountRequestDTO;
+import com.gni.banking.Model.PostAccountDTO;
+import com.gni.banking.Model.PutAccountDTO;
 import com.gni.banking.Service.AccountService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -51,13 +51,13 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<Account> add(@RequestBody AccountRequestDTO a) {
+    public ResponseEntity<Account> add(@RequestBody PostAccountDTO a) {
 
         return ResponseEntity.status(201).body(service.add(a));
     }
 
     @PutMapping("/{iban}")
-    public Account update(@RequestBody Account account, @PathVariable String iban) throws Exception {
+    public Account update(@RequestBody PutAccountDTO account, @PathVariable String iban) throws Exception {
         return service.update(account, iban);
     }
 

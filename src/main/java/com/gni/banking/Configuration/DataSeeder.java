@@ -1,11 +1,7 @@
 package com.gni.banking.Configuration;
 
 import com.gni.banking.Enums.AccountType;
-import com.gni.banking.Enums.Currency;
-import com.gni.banking.Enums.Status;
-import com.gni.banking.Model.Account;
-import com.gni.banking.Model.AccountRequestDTO;
-import com.gni.banking.Model.Transaction;
+import com.gni.banking.Model.PostAccountDTO;
 import com.gni.banking.Model.User;
 import com.gni.banking.Service.AccountService;
 import com.gni.banking.Service.TransactionService;
@@ -14,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 import static com.gni.banking.Enums.Role.Customer;
 import static com.gni.banking.Enums.Role.Employee;
@@ -64,7 +58,7 @@ public class DataSeeder implements ApplicationRunner {
         userService.add(user2);
 
 
-/*        AccountRequestDTO account = new AccountRequestDTO();
+/*        PostAccountDTO account = new PostAccountDTO();
         account.setUserId(1);
         account.setType(AccountType.Current);
         Account acc = accountService.add(account);
@@ -76,22 +70,22 @@ public class DataSeeder implements ApplicationRunner {
         accountService.update(acc, "NL01INHO0000000001");*/
 
 
-        AccountRequestDTO account1 = new AccountRequestDTO();
+        PostAccountDTO account1 = new PostAccountDTO();
         account1.setUserId(1);
         account1.setType(AccountType.Savings);
         accountService.add(account1);
 
-        AccountRequestDTO account2 = new AccountRequestDTO();
+        PostAccountDTO account2 = new PostAccountDTO();
         account2.setUserId(2);
         account2.setType(AccountType.Current);
         accountService.add(account2);
 
-        AccountRequestDTO account3 = new AccountRequestDTO();
+        PostAccountDTO account3 = new PostAccountDTO();
         account2.setUserId(3);
         account2.setType(AccountType.Current);
         accountService.add(account3);
 
-        AccountRequestDTO account4 = new AccountRequestDTO();
+        PostAccountDTO account4 = new PostAccountDTO();
         account2.setUserId(3);
         account2.setType(AccountType.Savings);
         accountService.add(account4);

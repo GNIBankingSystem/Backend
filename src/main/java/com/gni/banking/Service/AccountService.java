@@ -4,19 +4,18 @@ import com.gni.banking.Enums.AccountType;
 import com.gni.banking.Enums.Currency;
 import com.gni.banking.Enums.Status;
 import com.gni.banking.Model.Account;
-import com.gni.banking.Model.AccountRequestDTO;
+import com.gni.banking.Model.PostAccountDTO;
+import com.gni.banking.Model.PutAccountDTO;
 import com.gni.banking.Model.User;
 import com.gni.banking.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class AccountService {
@@ -102,7 +101,7 @@ public class AccountService {
 
     }
 
-    public Account add(AccountRequestDTO accountRequest) {
+    public Account add(PostAccountDTO accountRequest) {
         Account a = new Account();
         a.setId(ibanService.GenerateIban());
         String iban = ibanService.GenerateIban();
@@ -118,15 +117,12 @@ public class AccountService {
     }
 
 
-    public Account update(Account account, String iban) throws Exception {
+    public Account update(PutAccountDTO account, String iban) throws Exception {
         Account existingAccount = getByIban(iban);
 
         existingAccount.setUserId(account.getUserId());
         existingAccount.setType(account.getType());
         existingAccount.setAbsoluteLimit(account.getAbsoluteLimit());
-        existingAccount.setCurrency(account.getCurrency());
-        existingAccount.setBalance(account.getBalance());
-        existingAccount.setStatus(account.getStatus());
 
         try {
             return accountRepository.save(existingAccount);
@@ -189,5 +185,11 @@ public class AccountService {
 
     public int getUserIdByIban(String iban) {
         return accountRepository.getUserIdById(iban);
+    }
+
+    public void updateBalance(Account account, String id) {
+        Account existingAccount = getByIban(id);
+        existingAccount.setBalance(account.getBalance());
+        accountRepository.save(existingAccount);
     }
 }

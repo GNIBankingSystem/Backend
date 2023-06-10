@@ -131,8 +131,8 @@ public class TransactionService {
     private void updateBalanceOfAccounts(Account accountFrom, Account accountTo, double amount) throws Exception {
         accountFrom.setBalance(accountFrom.getBalance() - amount);
         accountTo.setBalance(accountTo.getBalance() + amount);
-        accountService.update(accountFrom, accountFrom.getId());
-        accountService.update(accountTo, accountTo.getId());
+        accountService.updateBalance(accountFrom, accountFrom.getId());
+        accountService.updateBalance(accountTo, accountTo.getId());
     }
 
     private boolean checkAccountStatus(Account accountFrom, Account accountTo) throws Exception {
