@@ -1,4 +1,5 @@
 package com.gni.banking.Controller;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gni.banking.Configuration.Jwt.JwtTokenProvider;
 import com.gni.banking.Enums.AccountType;
 import com.gni.banking.Enums.Currency;
@@ -9,12 +10,17 @@ import com.gni.banking.Service.AccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
 import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,6 +42,9 @@ public class AccountControllerTest {
     @MockBean
     private AccountService service;
 
+    @Mock
+    private ObjectMapper mapper;
+
     @MockBean
     private JwtTokenProvider jwtTokenProvider;
 
@@ -44,6 +53,40 @@ public class AccountControllerTest {
 
 
     }
+
+    @Test
+    public void getAllAccountsAPI() throws Exception
+    {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/accounts")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.accounts").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.accounts[*].id").isNotEmpty());
+    }
+
+    @Test
+    public void createAccountAPI() throws Exception
+    {
+        mockMvc.perform( MockMvcRequestBuilders
+                        .post("/accounts")
+                        //.headers(new HttpHeaders())
+                        .content(asJsonString(new Account("Nl01INHO000000032133", 1, AccountType.Current, 1000.0, Currency.EUR, 200.0, Status.Open)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Test
     void getAll() throws Exception {
