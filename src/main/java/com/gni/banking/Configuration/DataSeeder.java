@@ -54,7 +54,7 @@ public class DataSeeder implements ApplicationRunner {
         user2.setEmail("pietervenema@gmail.com");
         user2.setUsername("customer");
         user2.setFirstName("pieter");
-        user2.setLastName("venema");
+        user2.setLastName("jhonsen");
         user2.setPassword("customer");
         user2.setPhoneNumber(612345678);
         user2.setRoles(ROLE_CUSTOMER);
