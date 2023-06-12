@@ -132,6 +132,7 @@ public class UserService {
             response.setToken(jwtTokenProvider.createToken(user.getUsername(), user.getRoles(),user.getId()));
             response.setUsername(user.getUsername());
             response.setId(user.getId());
+            response.setRoles(user.getRoles());
             return response;
 
         } else {
