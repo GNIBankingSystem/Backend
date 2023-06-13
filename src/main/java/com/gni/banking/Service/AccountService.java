@@ -116,6 +116,10 @@ public class AccountService {
         return accountRepository.save(a);
     }
 
+    public Account addCompleteAccount(Account account){
+        return accountRepository.save(account);
+    }
+
 
     public Account update(PutAccountDTO account, String iban) throws Exception {
         Account existingAccount = getByIban(iban);

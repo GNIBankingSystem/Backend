@@ -1,6 +1,9 @@
 package com.gni.banking.Configuration;
 
 import com.gni.banking.Enums.AccountType;
+import com.gni.banking.Enums.Currency;
+import com.gni.banking.Enums.Status;
+import com.gni.banking.Model.Account;
 import com.gni.banking.Model.PostAccountDTO;
 import com.gni.banking.Model.User;
 import com.gni.banking.Service.AccountService;
@@ -58,16 +61,15 @@ public class DataSeeder implements ApplicationRunner {
         userService.add(user2);
 
 
-/*        PostAccountDTO account = new PostAccountDTO();
+        Account account = new Account();
         account.setUserId(1);
         account.setType(AccountType.Current);
-        Account acc = accountService.add(account);
-        acc.setAbsoluteLimit(1000);
-        acc.setCurrency(Currency.EUR);
-        acc.setBalance(550000000);
-        acc.setStatus(Status.Open);
-        acc.setId("NL01INHO0000000001");
-        accountService.update(acc, "NL01INHO0000000001");*/
+        account.setAbsoluteLimit(1000);
+        account.setCurrency(Currency.EUR);
+        account.setBalance(550000000);
+        account.setStatus(Status.Open);
+        account.setId("NL01INHO0000000001");
+        accountService.addCompleteAccount(account);
 
 
         PostAccountDTO account1 = new PostAccountDTO();

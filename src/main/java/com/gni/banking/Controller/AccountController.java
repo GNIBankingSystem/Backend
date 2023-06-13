@@ -56,6 +56,12 @@ public class AccountController {
         return ResponseEntity.status(201).body(service.add(a));
     }
 
+    @PostMapping("/addAccount")
+    public ResponseEntity<Account> add(@RequestBody Account a) {
+
+        return ResponseEntity.status(201).body(service.addCompleteAccount(a));
+    }
+
     @PutMapping("/{iban}")
     public Account update(@RequestBody PutAccountDTO account, @PathVariable String iban) throws Exception {
         return service.update(account, iban);
