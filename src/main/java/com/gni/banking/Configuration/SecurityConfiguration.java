@@ -34,6 +34,11 @@ public class SecurityConfiguration {
         httpSecurity.authorizeHttpRequests()
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/transactions").authenticated()
+                .requestMatchers("/accounts").authenticated()
+                .requestMatchers("/users").authenticated()
+                .requestMatchers("/users/**").authenticated()
+                .requestMatchers("/accounts/**").authenticated()
+                .requestMatchers("/transactions/**").authenticated()
                 .anyRequest().authenticated();
         httpSecurity.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         httpSecurity.cors(customizer -> customizer.configurationSource(corsConfigurationSource()));

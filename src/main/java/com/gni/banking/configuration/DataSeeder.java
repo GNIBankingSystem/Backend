@@ -16,8 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-import static com.gni.banking.Enums.Role.ROLE_ADMIN;
-import static com.gni.banking.Enums.Role.ROLE_CUSTOMER;
+import static com.gni.banking.Enums.Role.*;
 
 @Component
 public class DataSeeder implements ApplicationRunner {
@@ -61,6 +60,22 @@ public class DataSeeder implements ApplicationRunner {
         user2.setTransactionLimit(1000.00);
         user2.setDailyTransaction(0);
         userService.add(user2);
+
+        User user3 = new User();
+        user3.setId(3);
+        user3.setNumberofaccounts(1);
+        user3.setDayLimit(3000.00);
+        user3.setEmail("pietervenema@gmail.com");
+        user3.setUsername("employee");
+        user3.setFirstName("pieter");
+        user3.setLastName("jhonsen");
+        user3.setPassword("employee");
+        user3.setPhoneNumber(612345678);
+        user3.setRoles(ROLE_EMPLOYEE);
+        user3.setTransactionLimit(1000.00);
+        user3.setDailyTransaction(0);
+        userService.add(user3);
+
 
 
         Account account = new Account();
