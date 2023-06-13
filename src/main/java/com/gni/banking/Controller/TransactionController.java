@@ -59,31 +59,18 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody TransactionRequestDTO transactionRequestDTO, HttpServletRequest request) {
-        try {
+    public ResponseEntity<?> add(@RequestBody TransactionRequestDTO transactionRequestDTO, HttpServletRequest request) throws Exception {
             Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
             transaction.setType(TransactionType.TRANSFER);
             transaction.setPerformedBy(jwtTokenDecoder.getIdInToken(request));
             Transaction addedTransaction = service.add(transaction);
             return ResponseEntity.ok(modelMapper.map(addedTransaction, TransactionResponseDTO.class));
-        } catch (Exception e) {
-            ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.BAD_REQUEST, e.getMessage());
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-        }
     }
 
-
-
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody TransactionRequestDTO transactionRequestDTO, @PathVariable long id){
-        try{
+    public ResponseEntity<?> update(@RequestBody TransactionRequestDTO transactionRequestDTO, @PathVariable long id) throws Exception {
             Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
             return  ResponseEntity.ok(modelMapper.map(service.update(transaction, id), TransactionResponseDTO.class));
-        }
-        catch (Exception e){
-            ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.BAD_REQUEST, e.getMessage());
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-        }
     }
 
     @DeleteMapping("/{id}")
@@ -93,29 +80,19 @@ public class TransactionController {
     }
 
     @PostMapping("/withdraw")
-    public ResponseEntity<?> withdraw(@RequestBody TransactionRequestDTO transactionRequestDTO) {
-        try {
+    public ResponseEntity<?> withdraw(@RequestBody TransactionRequestDTO transactionRequestDTO) throws Exception {
             Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
             transaction.setType(TransactionType.WITHDRAW);
             Transaction addedTransaction = service.withdraw(transaction);
             return ResponseEntity.ok(modelMapper.map(addedTransaction, TransactionResponseDTO.class));
-        } catch (Exception e) {
-            ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.BAD_REQUEST, e.getMessage());
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-        }
     }
 
     @PostMapping("/deposit")
-    public ResponseEntity<?> deposit(@RequestBody TransactionRequestDTO transactionRequestDTO) {
-        try {
+    public ResponseEntity<?> deposit(@RequestBody TransactionRequestDTO transactionRequestDTO) throws Exception {
             Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
             transaction.setType(TransactionType.DEPOSIT);
             Transaction addedTransaction = service.deposit(transaction);
             return ResponseEntity.ok(modelMapper.map(addedTransaction, TransactionResponseDTO.class));
-        } catch (Exception e) {
-            ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.BAD_REQUEST, e.getMessage());
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-        }
     }
 
 }

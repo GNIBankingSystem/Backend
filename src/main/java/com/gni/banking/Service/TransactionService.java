@@ -2,6 +2,7 @@ package com.gni.banking.Service;
 
 import com.gni.banking.Enums.AccountType;
 import com.gni.banking.Enums.Status;
+import com.gni.banking.Exceptions.*;
 import com.gni.banking.Model.Account;
 import com.gni.banking.Model.Transaction;
 import com.gni.banking.Repository.TransactionRepository;
@@ -48,23 +49,6 @@ public class TransactionService {
 
     public Transaction add(Transaction transaction) throws Exception {
         //checks on account type and amount
-        /*String bankIban = "NL01INHO0000000001";
-        Role role = Role.valueOf("employee");
-        if(Objects.equals(transaction.getAccountFrom(), bankIban)){
-            if(role == Role.valueOf("EMPLOYEE")){
-                //do something
-            }else{
-                throw new Exception("You are not allowed to make this transaction");
-            }
-        }
-
-        if(Objects.equals(transaction.getAccountTo(), bankIban)){
-            if(role == Role.valueOf("employee")){
-                //do something
-            }else{
-                throw new Exception("You are not allowed to make this transaction");
-            }
-        }*/
         checksOnMakingAndEditingTransaction(transaction);
         transaction.setTimestamp(new Date());
         //update balance on accounts
@@ -95,18 +79,18 @@ public class TransactionService {
         Account accountFrom = accountService.getByIban(ibanFrom);
         Account accountTo = accountService.getByIban(ibanTo);
         if (accountFrom.getType() == AccountType.Savings && accountTo.getType() == AccountType.Savings)
-            throw new Exception("You can't transfer money between two savings accounts");
+            throw new InvalidAccountTypeOnTransactionException("You can't transfer money between two savings accounts");
         if (accountFrom.getType() == AccountType.Savings && accountTo.getType() == AccountType.Current) {
             if (accountFrom.getUserId() == accountTo.getUserId()) {
                 return true;
             }
-            throw new Exception("You can't transfer money from savings account to another user's current account");
+            throw new InvalidAccountTypeOnTransactionException("You can't transfer money from savings account to another user's current account");
         }
         if (accountFrom.getType() == AccountType.Current && accountTo.getType() == AccountType.Savings) {
             if (accountFrom.getUserId() == accountTo.getUserId()) {
                 return true;
             }
-            throw new Exception("You can't transfer money from current account to another user's savings account");
+            throw new InvalidAccountTypeOnTransactionException("You can't transfer money from current account to another user's savings account");
         }
         return true;
     }
@@ -115,13 +99,13 @@ public class TransactionService {
         Account accountFrom = accountService.getByIban(ibanFrom);
         Account accountTo = accountService.getByIban(ibanTo);
         if (accountFrom.getBalance() < amount)
-            throw new Exception("Not enough money on account");
+            throw new NotEnoughBalanceException("Not enough money on account");
         if(accountFrom.getAbsoluteLimit() < amount)
-            throw new Exception("Absolute limit exceeded");
+            throw new LimitOnTransactionExceededException("Absolute limit exceeded");
         if (accountFrom.getCurrency() != accountTo.getCurrency())
-            throw new Exception("You can't transfer money between accounts with different currencies");
+            throw new InvalidAccountCurrenyOnTransactionException("You can't transfer money between accounts with different currencies");
         if(!underDayLimitWithIban(ibanFrom, amount))
-            throw new Exception("Day limit exceeded");
+            throw new LimitOnTransactionExceededException("Day limit exceeded");
         return true;
     }
 
@@ -134,7 +118,7 @@ public class TransactionService {
 
     private boolean checkAccountStatus(Account accountFrom, Account accountTo) throws Exception {
         if (accountFrom.getStatus().equals(Status.Closed) || accountTo.getStatus().equals(Status.Closed))
-            throw new Exception("Cannot perform transaction on closed account");
+            throw new InvalidAccountStatusException("Cannot perform transaction on closed account");
         return true;
     }
 
@@ -234,7 +218,7 @@ public class TransactionService {
         if(Objects.equals(transaction.getAccountFrom(), bankIban)){
             return true;
         }else{
-            throw new Exception("You can only deposit money to the bank");
+            throw new IllegalArgumentException("You can only deposit money to the bank");
         }
 
     }
@@ -244,7 +228,7 @@ public class TransactionService {
         if(Objects.equals(transaction.getAccountTo(), bankIban)){
             return true;
         }else{
-            throw new Exception("You can only withdraw money from the bank");
+            throw new IllegalArgumentException("You can only withdraw money from the bank");
         }
     }
 
