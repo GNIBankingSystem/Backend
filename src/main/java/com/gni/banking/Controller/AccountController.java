@@ -3,6 +3,8 @@ package com.gni.banking.Controller;
 
 
 import com.gni.banking.Model.Account;
+import com.gni.banking.Model.PostAccountDTO;
+import com.gni.banking.Model.PutAccountDTO;
 import com.gni.banking.Service.AccountService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -38,8 +39,10 @@ public class AccountController {
     @GetMapping
     public List<Account> getAllAccounts(@RequestParam(defaultValue = "0") int offset,
                                         @RequestParam(defaultValue = "10") int limit,
-                                        @RequestParam(required = false) String userId) throws Exception {
-        return service.getAll(limit, offset, userId);
+                                        @RequestParam(required = false) String userId,
+                                        @RequestParam(required = false) String type,
+                                        @RequestParam(required = false) String status) throws Exception {
+        return service.getAll(limit, offset, userId, type, status);
     }
 
     @GetMapping("/{id}")
@@ -48,13 +51,19 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<Account> add(@RequestBody Account a) {
+    public ResponseEntity<Account> add(@RequestBody PostAccountDTO a) {
 
         return ResponseEntity.status(201).body(service.add(a));
     }
 
+    @PostMapping("/addAccount")
+    public ResponseEntity<Account> add(@RequestBody Account a) {
+
+        return ResponseEntity.status(201).body(service.addCompleteAccount(a));
+    }
+
     @PutMapping("/{iban}")
-    public Account update(@RequestBody Account account, @PathVariable String iban) throws Exception {
+    public Account update(@RequestBody PutAccountDTO account, @PathVariable String iban) throws Exception {
         return service.update(account, iban);
     }
 

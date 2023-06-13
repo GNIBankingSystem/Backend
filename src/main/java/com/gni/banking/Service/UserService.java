@@ -129,10 +129,10 @@ public class UserService {
 
             // Return a JWT to the client
             LoginResponseDTO response = new LoginResponseDTO();
+            response.setId(user.getId());
             response.setToken(jwtTokenProvider.createToken(user.getUsername(), user.getRoles(),user.getId()));
             response.setUsername(user.getUsername());
-            response.setId(user.getId());
-            response.setRoles(user.getRoles());
+            response.setRole(user.getRoles());
             return response;
 
         } else {

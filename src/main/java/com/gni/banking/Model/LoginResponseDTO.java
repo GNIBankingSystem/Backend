@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 public class LoginResponseDTO {
+    private long id;
     private String username;
     private String token;
-    private long id;
-    private Role roles;
+    private Role role;
 }
