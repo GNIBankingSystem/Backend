@@ -108,7 +108,7 @@ public class AccountService {
         a.setId(iban);
         a.setUserId(accountRequest.getUserId());
         a.setType(accountRequest.getType());
-        a.setAbsoluteLimit(1000.00);
+        a.setAbsoluteLimit(2000.00);
         a.setCurrency(Currency.EUR);
         a.setBalance(0.00);
         a.setStatus(Status.Open);
