@@ -16,22 +16,22 @@ Feature: Accounts CRUD operations
   Scenario: Get an account
     Given I have a valid JWT token
     And The endpoint for "accounts" is available for method "GET"
-    And I create an account with id "NL01INHO0000000002"
-    When I get a account with id "NL01INHO0000000002"
+    And I create an account with id "NL01INHO0000000052"
+    When I get a account with id "NL01INHO0000000052"
     Then The response status is 200
 
   Scenario: Update an account
     Given I have a valid JWT token
     And The endpoint for "accounts/:id" is available for method "PUT"
-    And I create an account with id "NL01INHO0000000003"
-    When I update the account type of an account with id "NL01INHO0000000003" to "Current"
+    And I create an account with id "NL01INHO0000000053"
+    When I update the account type of an account with id "NL01INHO0000000053" to "Current"
     Then The response status is 200
-    Then The account type of the account with id "NL01INHO0000000003" is "Current"
+    Then The account type of the account with id "NL01INHO0000000053" is "Current"
 
   Scenario: Delete an account
     Given I have a valid JWT token
     And The endpoint for "accounts/:id" is available for method "DELETE"
-    And I create an account with id "NL01INHO0000000004"
-    When I delete the account with id "NL01INHO0000000004"
+    And I create an account with id "NL01INHO0000000054"
+    When I delete the account with id "NL01INHO0000000054"
     Then The response status is 200
-    Then The account with id "NL01INHO0000000004" is deleted
+    Then The account with id "NL01INHO0000000054" is deleted

@@ -109,7 +109,7 @@ public class AccountStepDefinitions extends BaseStepDefinitions{
 
     @And("I create an account with id {string}")
     public void iCreateAnAccountWithId(String id) throws JsonProcessingException {
-        Account account = new Account(id, 1, AccountType.Savings, 100000, Currency.EUR, 100, Status.Open);
+        Account account = new Account(id, 1, AccountType.Savings, 0.0, Currency.EUR, 100, Status.Open);
         restTemplate.exchange("/accounts/addAccount",
                 HttpMethod.POST,
                 new HttpEntity<>(
