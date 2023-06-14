@@ -1,7 +1,6 @@
 package com.gni.banking.Controller;
 
-import com.gni.banking.Model.LoginRequestDTO;
-import com.gni.banking.Model.LoginResponseDTO;
+import com.gni.banking.Model.DTO.LoginRequestDTO;
 import com.gni.banking.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

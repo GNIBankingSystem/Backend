@@ -1,4 +1,4 @@
-package com.gni.banking.Model;
+package com.gni.banking.Model.DTO;
 
 import lombok.Data;
 
