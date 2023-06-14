@@ -3,9 +3,11 @@ package com.gni.banking.Service;
 import com.gni.banking.Configuration.Jwt.JwtTokenProvider;
 import com.gni.banking.Model.LoginRequestDTO;
 import com.gni.banking.Model.LoginResponseDTO;
+import com.gni.banking.Enums.Role;
 import com.gni.banking.Model.User;
 import com.gni.banking.Repository.AccountRepository;
 import com.gni.banking.Repository.UserRepository;
+import jakarta.validation.constraints.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,8 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.naming.AuthenticationException;
 import java.util.List;
-
-
+import java.util.Collections;
+import java.util.Optional;
 
 @Service
 
@@ -47,8 +49,6 @@ public class UserService {
         return (List<User>) userRepository.findAll();
     }
 
-
-
     public User getById(long id) {
         return (User) userRepository.findById(id).orElse(null);
     }
@@ -66,8 +66,26 @@ public class UserService {
         return userRepository.getDayLimitById(userId);
     }
 
+    public User getById(long id) {
+        return (User) userRepository.findById(id).orElse(null);
+    }
 
-    // Implement other CRUD methods (e.g., getUser, updateUser, deleteUser) as needed
+    public User add(User user) {
+        Optional<User> existingUser = userRepository.findUserByUsername(user.getUsername());
+        if (existingUser.isEmpty()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            if (user.getRoles() == null) {
+                user.setRoles(Role.Customer);
+            }
+            return userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("Username is already taken");
+        }
+    }
+
+    public double getDayLimitById(int userId){
+        return userRepository.getDayLimitById(userId);
+    }
 
     public User update(User a, long id) throws Exception {
         User existingUser = getById(a.getId());
@@ -140,6 +158,27 @@ public class UserService {
         }
     }
 
+    public LoginResponseDTO register(User user) throws AuthenticationException {
+        // Check if the username is already taken
 
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new AuthenticationException("Username is already taken");
+        }
 
+        // Hash the password
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
+
+        // Set any default role or permissions
+        user.setRoles(Role.Customer); //
+
+        // Save the user to the database
+        User savedUser = userRepository.save(user);
+
+        // Return a JWT to the client
+        LoginResponseDTO response = new LoginResponseDTO();
+        response.setToken("Successfully registered");
+
+        return response;
+    }
 }

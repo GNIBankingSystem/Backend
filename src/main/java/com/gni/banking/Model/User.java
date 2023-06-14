@@ -3,6 +3,8 @@ package com.gni.banking.Model;
 import com.gni.banking.Enums.Role;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -24,7 +26,6 @@ public class User {
     private String email;
     private long phoneNumber;
     private String address;
-
     private String firstName;
     private String lastName;
     private Role roles;
