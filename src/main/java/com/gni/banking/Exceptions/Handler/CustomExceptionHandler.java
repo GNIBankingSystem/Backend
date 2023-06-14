@@ -12,6 +12,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+@RestControllerAdvice
 public class CustomExceptionHandler {
 
     @ExceptionHandler({InvalidAccountTypeOnTransactionException.class,
