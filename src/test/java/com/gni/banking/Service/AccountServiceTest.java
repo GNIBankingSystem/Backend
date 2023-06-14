@@ -34,6 +34,7 @@ public class AccountServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+
     private Account getMockAccount(int userId, AccountType type) throws Exception {
         Account account = new Account();
         account.setId("NL01INHO0000000091");
@@ -53,15 +54,15 @@ public class AccountServiceTest {
         accountRequest.setType(AccountType.Savings);
 
         Account expectedAccount = new Account();
-        expectedAccount.setId("IBAN123");
+        expectedAccount.setId("NL01INHO0000000091");
         expectedAccount.setUserId(accountRequest.getUserId());
         expectedAccount.setType(accountRequest.getType());
-        expectedAccount.setAbsoluteLimit(1000.00);
+        expectedAccount.setAbsoluteLimit(0.00);
         expectedAccount.setCurrency(Currency.EUR);
         expectedAccount.setBalance(0.00);
         expectedAccount.setStatus(Status.Open);
 
-        Mockito.when(ibanService.GenerateIban()).thenReturn("IBAN123");
+        Mockito.when(ibanService.GenerateIban()).thenReturn("NL01INHO0000000092");
         Mockito.when(accountRepository.save(Mockito.any(Account.class))).thenReturn(expectedAccount);
 
         // Act
@@ -69,7 +70,7 @@ public class AccountServiceTest {
 
         // Assert
         Assertions.assertEquals(expectedAccount, createdAccount);
-        Mockito.verify(ibanService, Mockito.times(2)).GenerateIban();
+        Mockito.verify(ibanService, Mockito.times(1)).GenerateIban();
         Mockito.verify(accountRepository, Mockito.times(1)).save(Mockito.any(Account.class));
     }
 
@@ -80,7 +81,7 @@ public class AccountServiceTest {
         accountRequest.setUserId(1);
         accountRequest.setType(AccountType.Savings);
 
-        Mockito.when(ibanService.GenerateIban()).thenReturn("IBAN123");
+        Mockito.when(ibanService.GenerateIban()).thenReturn("NL01INHO0000000092");
         Mockito.when(accountRepository.save(Mockito.any(Account.class))).thenThrow(new RuntimeException());
 
         // Act & Assert

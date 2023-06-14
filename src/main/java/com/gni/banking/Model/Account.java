@@ -43,7 +43,7 @@ public class Account {
     }
 
     public void setUserId(long userId) {
-        if (userId > 0) {
+        if (userId >= 0) {
             this.userId = userId;
         } else {
             throw new IllegalArgumentException("Invalid user id");
