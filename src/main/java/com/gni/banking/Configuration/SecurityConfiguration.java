@@ -19,10 +19,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
+import static org.springframework.security.authorization.AuthenticatedAuthorizationManager.authenticated;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+
 public class SecurityConfiguration {
     @Autowired
     private JwtTokenFilter jwtTokenFilter;
@@ -33,6 +36,7 @@ public class SecurityConfiguration {
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity.authorizeHttpRequests()
                 .requestMatchers("/login").permitAll()
+				.requestMatchers("/register").permitAll()
                 .requestMatchers("/transactions").authenticated()
                 .requestMatchers("/accounts").authenticated()
                 .requestMatchers("/users").authenticated()
