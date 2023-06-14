@@ -53,21 +53,8 @@ public class UserService {
         return (User) userRepository.findById(id).orElse(null);
     }
 
-    public User add(User a) {
-        if (userRepository.findUserByUsername(a.getUsername()).isEmpty()) {
-            a.setPassword(passwordEncoder.encode(a.getPassword()));
-            return userRepository.save(a);
-        }
-        throw new IllegalArgumentException("Username is already taken");
-
-    }
-
     public double getDayLimitById(int userId){
         return userRepository.getDayLimitById(userId);
-    }
-
-    public User getById(long id) {
-        return (User) userRepository.findById(id).orElse(null);
     }
 
     public User add(User user) {
@@ -75,16 +62,12 @@ public class UserService {
         if (existingUser.isEmpty()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             if (user.getRoles() == null) {
-                user.setRoles(Role.Customer);
+                user.setRoles(Role.ROLE_CUSTOMER);
             }
             return userRepository.save(user);
         } else {
             throw new IllegalArgumentException("Username is already taken");
         }
-    }
-
-    public double getDayLimitById(int userId){
-        return userRepository.getDayLimitById(userId);
     }
 
     public User update(User a, long id) throws Exception {
@@ -170,7 +153,7 @@ public class UserService {
         user.setPassword(hashedPassword);
 
         // Set any default role or permissions
-        user.setRoles(Role.Customer); //
+        user.setRoles(Role.ROLE_CUSTOMER); //
 
         // Save the user to the database
         User savedUser = userRepository.save(user);

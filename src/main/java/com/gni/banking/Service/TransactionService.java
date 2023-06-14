@@ -146,10 +146,6 @@ public class TransactionService {
         return Pattern.matches(regex, iban);
     }
 
-    Double dayLimitAmountRemaining(int userId){
-        return userService.getDayLimitById(userId) - amountTransferredToday(userId);
-    }
-
     public boolean underDayLimitWithIban(String iban, double amount){
         int userId = (int) accountService.getById(iban).getUserId();
         return underDayLimit(userId, amount);
