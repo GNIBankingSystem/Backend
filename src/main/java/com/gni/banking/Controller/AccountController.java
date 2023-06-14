@@ -51,7 +51,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<Account> add(@RequestBody PostAccountDTO a) {
+    public ResponseEntity<Account> add(@RequestBody PostAccountDTO a) throws Exception {
 
         return ResponseEntity.status(201).body(service.add(a));
     }
