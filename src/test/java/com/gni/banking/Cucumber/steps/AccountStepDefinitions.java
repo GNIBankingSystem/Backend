@@ -60,7 +60,7 @@ public class AccountStepDefinitions extends BaseStepDefinitions{
                 new HttpEntity<>(null, httpHeaders),
                 String.class
         );
-        System.out.println(response);
+
         List<String> options = Arrays.asList(Objects.requireNonNull(response.getHeaders().get("Allow")).get(0).split(","));
         Assertions.assertTrue(options.contains(method.toUpperCase()));
     }

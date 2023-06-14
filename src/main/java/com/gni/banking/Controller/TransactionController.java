@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.ErrorResponse;
@@ -49,7 +50,6 @@ public class TransactionController {
 
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     public ResponseEntity<?> getById(@PathVariable long id) {
          if((id <= 0)) {
             throw new IllegalArgumentException("Illegal id ,please enter a valid id ");
@@ -58,7 +58,9 @@ public class TransactionController {
             return ResponseEntity.ok(modelMapper.map(transaction, TransactionResponseDTO.class));
     }
 
-    @PostMapping
+    @PostMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> add(@RequestBody TransactionRequestDTO transactionRequestDTO, HttpServletRequest request) throws Exception {
             Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
             transaction.setType(TransactionType.TRANSFER);
@@ -69,14 +71,12 @@ public class TransactionController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     public ResponseEntity<?> update(@RequestBody TransactionPutDto transactionPutDto, @PathVariable long id) throws Exception {
             Transaction transaction = modelMapper.map(transactionPutDto, Transaction.class);
             return  ResponseEntity.ok(modelMapper.map(service.update(transaction, id), TransactionResponseDTO.class));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     public void delete(@PathVariable long id){
         service.delete(id);
     }
