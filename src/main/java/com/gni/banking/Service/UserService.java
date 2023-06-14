@@ -1,16 +1,12 @@
 package com.gni.banking.Service;
 
 import com.gni.banking.Configuration.Jwt.JwtTokenProvider;
-import com.gni.banking.Model.LoginRequestDTO;
-import com.gni.banking.Model.LoginResponseDTO;
+import com.gni.banking.Model.DTO.LoginRequestDTO;
+import com.gni.banking.Model.DTO.LoginResponseDTO;
 import com.gni.banking.Model.User;
 import com.gni.banking.Repository.AccountRepository;
 import com.gni.banking.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
