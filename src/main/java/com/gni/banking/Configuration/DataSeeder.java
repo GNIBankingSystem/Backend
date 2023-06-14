@@ -64,7 +64,7 @@ public class DataSeeder implements ApplicationRunner {
         Account account = new Account();
         account.setUserId(1);
         account.setType(AccountType.Current);
-        account.setAbsoluteLimit(1000);
+        account.setAbsoluteLimit(0);
         account.setCurrency(Currency.EUR);
         account.setBalance(550000000);
         account.setStatus(Status.Open);
@@ -83,13 +83,13 @@ public class DataSeeder implements ApplicationRunner {
         accountService.add(account2);
 
         PostAccountDTO account3 = new PostAccountDTO();
-        account2.setUserId(2);
-        account2.setType(AccountType.Current);
+        account3.setUserId(2);
+        account3.setType(AccountType.Current);
         accountService.add(account3);
 
         PostAccountDTO account4 = new PostAccountDTO();
-        account2.setUserId(2);
-        account2.setType(AccountType.Savings);
+        account4.setUserId(2);
+        account4.setType(AccountType.Savings);
         accountService.add(account4);
 
         /*Transaction transaction1 = new Transaction();
