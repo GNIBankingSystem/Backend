@@ -4,7 +4,7 @@ import com.gni.banking.Enums.AccountType;
 import com.gni.banking.Enums.Currency;
 import com.gni.banking.Enums.Status;
 import com.gni.banking.Model.Account;
-import com.gni.banking.Model.DTO.PostAccountDTO;
+import com.gni.banking.Model.PostAccountDTO;
 import com.gni.banking.Model.User;
 import com.gni.banking.Service.AccountService;
 import com.gni.banking.Service.TransactionService;

@@ -2,8 +2,8 @@ package com.gni.banking.Controller;
 
 import com.gni.banking.Enums.TransactionType;
 import com.gni.banking.Model.Transaction;
-import com.gni.banking.Model.DTO.TransactionRequestDTO;
-import com.gni.banking.Model.DTO.TransactionResponseDTO;
+import com.gni.banking.Model.TransactionRequestDTO;
+import com.gni.banking.Model.TransactionResponseDTO;
 import com.gni.banking.Service.TransactionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
