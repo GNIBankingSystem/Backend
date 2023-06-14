@@ -1,4 +1,4 @@
-package com.gni.banking.Model.DTO;
+package com.gni.banking.Model;
 
 import com.gni.banking.Enums.Role;
 import lombok.Data;

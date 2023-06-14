@@ -5,7 +5,7 @@ import com.gni.banking.Enums.AccountType;
 import com.gni.banking.Enums.Currency;
 import com.gni.banking.Enums.Status;
 import com.gni.banking.Model.Account;
-import com.gni.banking.Model.DTO.PostAccountDTO;
+import com.gni.banking.Model.PostAccountDTO;
 import com.gni.banking.Repository.AccountRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
