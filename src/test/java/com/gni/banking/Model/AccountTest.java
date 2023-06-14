@@ -14,7 +14,7 @@ public class AccountTest {
 
     @BeforeEach
     void setUp() {
-        account = new Account("NL02INHO0000000001", 1, AccountType.Current, 1000, Currency.EUR, 1000, Status.Open);
+        account = new Account("NL02INHO0000000001", 1, AccountType.Current, 0.0, Currency.EUR, 1000, Status.Open);
     }
 
     @Test
@@ -28,41 +28,34 @@ public class AccountTest {
     }
 
     @Test
-    void typeShouldBeValid() {
-        assert account.getType() != null;
-    }
-
-    @Test
-    void absoluteLimitShouldBeValid() {
-        assert account.getAbsoluteLimit() >= 0;
-    }
-
-    @Test
-    void setId() {
+    void setIdWhileItIsAlreadySet() {
         assertThrows(Exception.class, () -> account.setId("NL01INH0000000001"));
     }
 
     @Test
-    void setUserId() {
+    void setIdWhileItIsNotValid() {
+        assertThrows(Exception.class, () -> account.setId("NL01INH000000"));
     }
 
     @Test
-    void setType() {
+    void setUserIdNegative() {
+        assertThrows(IllegalArgumentException.class, () -> account.setUserId(-1));
     }
 
     @Test
     void setAbsoluteLimit() {
+        assertThrows(IllegalArgumentException.class, () -> account.setAbsoluteLimit(-1));
     }
 
     @Test
-    void setCurrency() {
+    void setBalanceLowerThanAbsoluteLimit() {
+        account.setBalance(20);
+        account.setAbsoluteLimit(10);
+        assertThrows(IllegalArgumentException.class, () -> account.setBalance(2));
     }
 
     @Test
-    void setBalance() {
-    }
-
-    @Test
-    void setStatus() {
+    void setBalanceNegative() {
+        assertThrows(IllegalArgumentException.class, () -> account.setBalance(-1));
     }
 }
