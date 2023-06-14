@@ -48,7 +48,7 @@ public class AccountStepDefinitions extends BaseStepDefinitions{
 
     @Given("I have a valid JWT token")
     public void iHaveAValidJWTToken() {
-        String jwtToken = jwtTokenProvider.createToken("username", Role.ROLE_EMPLOYEE, 2);
+        String jwtToken = jwtTokenProvider.createToken("employee", Role.ROLE_EMPLOYEE, 2);
         httpHeaders.add("Authorization", "Bearer " + jwtToken);
     }
 
@@ -60,6 +60,7 @@ public class AccountStepDefinitions extends BaseStepDefinitions{
                 new HttpEntity<>(null, httpHeaders),
                 String.class
         );
+        System.out.println(response);
         List<String> options = Arrays.asList(Objects.requireNonNull(response.getHeaders().get("Allow")).get(0).split(","));
         Assertions.assertTrue(options.contains(method.toUpperCase()));
     }
@@ -74,7 +75,7 @@ public class AccountStepDefinitions extends BaseStepDefinitions{
     public void i_should_receive_all_accounts() {
 
         int actual = JsonPath.read(response.getBody(), "$.size()");
-        Assertions.assertEquals(5, actual);
+        Assertions.assertEquals(6, actual);
     }
 
     @When("I create an account with userId {int} and accountType {string}")

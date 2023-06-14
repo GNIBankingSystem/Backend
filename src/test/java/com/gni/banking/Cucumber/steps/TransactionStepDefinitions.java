@@ -39,21 +39,6 @@ public class TransactionStepDefinitions extends BaseStepDefinitions {
     @Autowired
     private ObjectMapper mapper;
 
-    @Given("I have a valid JWT token")
-    public void iHaveAValidJWTToken() {
-        String jwtToken = jwtTokenProvider.createToken("username", Role.ROLE_EMPLOYEE, 2);
-        httpHeaders.add("Authorization", "Bearer " + jwtToken);
-    }
-
-    @Given("The endpoint for {string} is available for method {string}")
-    public void theEndpointForIsAvailableForMethod(String endpoint, String method) {
-        response = restTemplate.exchange(
-                "/" + endpoint,
-                HttpMethod.OPTIONS,
-                new HttpEntity<>(null, httpHeaders),
-                String.class);
-    }
-
     @When("I retrive all transactions")
     public void iRetriveAllTransactions() {
         response = restTemplate.exchange(
@@ -87,12 +72,6 @@ public class TransactionStepDefinitions extends BaseStepDefinitions {
         transactionRequestDTO.setAmount(amount);
         return transactionRequestDTO;
     }
-
-    @Then("The response status is {int}")
-    public void theResponseStatusIs(int status) {
-        Assertions.assertEquals(status, response.getStatusCode().value());
-    }
-
 
     @And("The transaction has an id")
     public void theTransactionHasId() throws JsonProcessingException {

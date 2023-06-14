@@ -86,7 +86,7 @@ public class DataSeeder implements ApplicationRunner {
         account.setCurrency(Currency.EUR);
         account.setBalance(550000000);
         account.setAbsoluteLimit(100000);
-        account.setStatus(Status.Closed);
+        account.setStatus(Status.Open);
         account.setId("NL01INHO0000000001");
         accountService.addCompleteAccount(account);
 
