@@ -3,6 +3,7 @@ package com.gni.banking.Configuration;
 import com.gni.banking.Enums.AccountType;
 import com.gni.banking.Enums.Currency;
 import com.gni.banking.Enums.Status;
+import com.gni.banking.Enums.TransactionType;
 import com.gni.banking.Model.Account;
 import com.gni.banking.Model.Transaction;
 import com.gni.banking.Model.PostAccountDTO;
@@ -18,8 +19,6 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 import static com.gni.banking.Enums.Role.*;
-import static com.gni.banking.Enums.Role.Customer;
-import static com.gni.banking.Enums.Role.Employee;
 
 @Component
 public class DataSeeder implements ApplicationRunner {
@@ -44,7 +43,7 @@ public class DataSeeder implements ApplicationRunner {
         user1.setLastName("venema");
         user1.setPassword("admin");
         user1.setPhoneNumber(612345678);
-        user1.setRoles(Employee);
+        user1.setRoles(ROLE_ADMIN);
         user1.setTransactionLimit(1000.00);
         user1.setDailyTransaction(0);
         userService.add(user1);
@@ -84,23 +83,32 @@ public class DataSeeder implements ApplicationRunner {
         Account account = new Account();
         account.setUserId(1);
         account.setType(AccountType.Current);
-        account.setAbsoluteLimit(0);
         account.setCurrency(Currency.EUR);
         account.setBalance(550000000);
-        account.setStatus(Status.Open);
+        account.setAbsoluteLimit(100000);
+        account.setStatus(Status.Closed);
         account.setId("NL01INHO0000000001");
         accountService.addCompleteAccount(account);
 
+        Account account2 = new Account();
+        account2.setUserId(1);
+        account2.setType(AccountType.Current);
+        account2.setCurrency(Currency.EUR);
+        account2.setBalance(550000000);
+        account2.setAbsoluteLimit(100000000);
+        account2.setStatus(Status.Open);
+        account2.setId("NL01INHO0000000011");
+        accountService.addCompleteAccount(account2);
 
         PostAccountDTO account1 = new PostAccountDTO();
         account1.setUserId(1);
         account1.setType(AccountType.Savings);
         accountService.add(account1);
 
-        PostAccountDTO account2 = new PostAccountDTO();
+        PostAccountDTO account22 = new PostAccountDTO();
         account2.setUserId(2);
         account2.setType(AccountType.Current);
-        accountService.add(account2);
+        accountService.add(account22);
 
         PostAccountDTO account3 = new PostAccountDTO();
         account3.setUserId(2);
@@ -112,27 +120,17 @@ public class DataSeeder implements ApplicationRunner {
         account4.setType(AccountType.Savings);
         accountService.add(account4);
 
-        /*Transaction transaction1 = new Transaction();
+        Transaction transaction1 = new Transaction();
         transaction1.setId(1);
         transaction1.setTimestamp(new Date());
         transaction1.setAccountFrom("NL01INHO0000000001");
-        transaction1.setAccountTo("NL01INHO45687431812");
+        transaction1.setAccountTo("NL01INHO0000000011");
         transaction1.setAmount(50);
         transaction1.setPerformedBy(1);
+        transaction1.setType(TransactionType.TRANSFER);
         transaction1.setArchived(false);
         transactionService.add(transaction1);
 
-        Transaction transaction2 = new Transaction();
-        transaction2.setId(2);
-        transaction2.setTimestamp(new Date());
-        transaction2.setAccountFrom("NL01INHO456874318");
-        transaction2.setTimeStamp(new Date());
-        transaction2.setAccountFrom("NL01INHO45687431812");
-        transaction2.setAccountTo("NL01INHO0000000001");
-        transaction2.setAmount(100);
-        transaction2.setPerformedBy(2);
-        transaction2.setArchived(false);
-        transactionService.add(transaction2);*/
 
     }
 }

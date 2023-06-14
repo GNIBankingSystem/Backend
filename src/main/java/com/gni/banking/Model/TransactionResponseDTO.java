@@ -1,5 +1,6 @@
 package com.gni.banking.Model;
 
+import com.gni.banking.Enums.TransactionType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,4 +13,5 @@ public class TransactionResponseDTO {
     private String accountTo;
     private double amount;
     private long performedBy;
+    private TransactionType type;
 }

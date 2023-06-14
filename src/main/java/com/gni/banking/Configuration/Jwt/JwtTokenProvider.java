@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
 import java.util.Date;
 
 @Component
@@ -27,7 +28,10 @@ public class JwtTokenProvider {
         claims.put("auth", role);
         claims.put("id",id);
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + 360000000);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        calendar.add(Calendar.YEAR, 1);
+        Date expiration = calendar.getTime();
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)

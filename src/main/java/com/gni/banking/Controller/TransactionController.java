@@ -3,6 +3,7 @@ package com.gni.banking.Controller;
 import com.gni.banking.Configuration.Jwt.JwtTokenDecoder;
 import com.gni.banking.Enums.TransactionType;
 import com.gni.banking.Model.Transaction;
+import com.gni.banking.Model.TransactionPutDto;
 import com.gni.banking.Model.TransactionRequestDTO;
 import com.gni.banking.Model.TransactionResponseDTO;
 import com.gni.banking.Service.TransactionService;
@@ -48,14 +49,13 @@ public class TransactionController {
 
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     public ResponseEntity<?> getById(@PathVariable long id) {
-        try{
+         if((id <= 0)) {
+            throw new IllegalArgumentException("Illegal id ,please enter a valid id ");
+         }
             Transaction transaction = service.getById(id);
             return ResponseEntity.ok(modelMapper.map(transaction, TransactionResponseDTO.class));
-        }catch (Exception e){
-            ErrorResponse errorResponse = ErrorResponse.create(e, HttpStatus.BAD_REQUEST, "Transaction not found");
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-        }
     }
 
     @PostMapping
@@ -63,18 +63,20 @@ public class TransactionController {
             Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
             transaction.setType(TransactionType.TRANSFER);
             transaction.setPerformedBy(jwtTokenDecoder.getIdInToken(request));
+            System.out.println(transaction);
             Transaction addedTransaction = service.add(transaction);
             return ResponseEntity.ok(modelMapper.map(addedTransaction, TransactionResponseDTO.class));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody TransactionRequestDTO transactionRequestDTO, @PathVariable long id) throws Exception {
-            Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
+    public ResponseEntity<?> update(@RequestBody TransactionPutDto transactionPutDto, @PathVariable long id) throws Exception {
+            Transaction transaction = modelMapper.map(transactionPutDto, Transaction.class);
             return  ResponseEntity.ok(modelMapper.map(service.update(transaction, id), TransactionResponseDTO.class));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     public void delete(@PathVariable long id){
         service.delete(id);
     }

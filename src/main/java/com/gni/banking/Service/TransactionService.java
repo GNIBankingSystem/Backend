@@ -57,11 +57,12 @@ public class TransactionService {
         return repository.save(transaction);
     }
 
-    private void checksOnMakingAndEditingTransaction(Transaction transaction) throws Exception {
+    public void checksOnMakingAndEditingTransaction(Transaction transaction) throws Exception {
         checkIbans(transaction.getAccountFrom(), transaction.getAccountTo());
         checkAccountStatus(accountService.getByIban(transaction.getAccountFrom()), accountService.getByIban(transaction.getAccountTo()));
         checkAccountTypes(transaction.getAccountFrom(), transaction.getAccountTo());
         checkAmountsOnTransaction(transaction.getAccountFrom(), transaction.getAccountTo(), transaction.getAmount());
+        checkNegativeAmount(transaction.getAmount());
     }
 
     public Transaction update(Transaction transaction, long id) throws Exception {
@@ -75,7 +76,7 @@ public class TransactionService {
     }
 
 
-    private boolean checkAccountTypes(String ibanFrom, String ibanTo) throws Exception {
+    public boolean checkAccountTypes(String ibanFrom, String ibanTo) throws Exception {
         Account accountFrom = accountService.getByIban(ibanFrom);
         Account accountTo = accountService.getByIban(ibanTo);
         if (accountFrom.getType() == AccountType.Savings && accountTo.getType() == AccountType.Savings)
@@ -95,9 +96,10 @@ public class TransactionService {
         return true;
     }
 
-    private boolean checkAmountsOnTransaction(String ibanFrom, String ibanTo, double amount) throws Exception {
+    public boolean checkAmountsOnTransaction(String ibanFrom, String ibanTo, double amount) throws Exception {
         Account accountFrom = accountService.getByIban(ibanFrom);
         Account accountTo = accountService.getByIban(ibanTo);
+        System.out.println(accountFrom.getBalance());
         if (accountFrom.getBalance() < amount)
             throw new NotEnoughBalanceException("Not enough money on account");
         if(accountFrom.getAbsoluteLimit() < amount)
@@ -238,6 +240,13 @@ public class TransactionService {
             return repository.getTransactionsByPerformedBy(id);
         }
         return transactionFilterService.getTransactionByPerformedByWithFilter(id,startDate,endDate,ibanTo,comparisonOperator,balance);
+    }
+
+    private boolean checkNegativeAmount(double amount) throws Exception{
+        if(amount <= 0){
+            throw new IllegalArgumentException("Amount cant be negative or 0");
+        }
+        return true;
     }
 }
 

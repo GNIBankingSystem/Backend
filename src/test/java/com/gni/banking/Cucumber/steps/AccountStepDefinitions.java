@@ -48,7 +48,7 @@ public class AccountStepDefinitions extends BaseStepDefinitions{
 
     @Given("I have a valid JWT token")
     public void iHaveAValidJWTToken() {
-        String jwtToken = jwtTokenProvider.createToken("username", Role.Employee, 2);
+        String jwtToken = jwtTokenProvider.createToken("username", Role.ROLE_EMPLOYEE, 2);
         httpHeaders.add("Authorization", "Bearer " + jwtToken);
     }
 
