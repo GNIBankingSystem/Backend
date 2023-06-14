@@ -61,7 +61,9 @@ public class Account {
     }
 
     public void setAbsoluteLimit(double absoluteLimit) {
-        if (absoluteLimit >= 0) {
+        if (absoluteLimit > balance) {
+            throw new IllegalArgumentException("Absolute limit cannot be higher than balance");
+        } else if (absoluteLimit >= 0) {
             this.absoluteLimit = absoluteLimit;
         } else {
             throw new IllegalArgumentException("Invalid absolute limit must be positive");

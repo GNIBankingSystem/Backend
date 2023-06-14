@@ -48,6 +48,12 @@ public class AccountTest {
     }
 
     @Test
+    void setAbsoluteLimitHigherThanBalance() {
+        account.setBalance(20);
+        assertThrows(IllegalArgumentException.class, () -> account.setAbsoluteLimit(30));
+    }
+
+    @Test
     void setBalanceLowerThanAbsoluteLimit() {
         account.setBalance(20);
         account.setAbsoluteLimit(10);
