@@ -2,28 +2,14 @@ package com.gni.banking.Model;
 import com.gni.banking.Enums.Role;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-<<<<<<< Updated upstream
 import jakarta.persistence.GenerationType;
-=======
->>>>>>> Stashed changes
 import jakarta.persistence.Id;
 
 @Entity
 public class User {
     @Id
-<<<<<<< Updated upstream
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-=======
-    @GeneratedValue
-    private long id;
-
-    private String username;
-    private String password;
-    private String email;
-    private long phoneNumber;
-    private String address;
->>>>>>> Stashed changes
 
     private String firstName;
     private String lastName;
