@@ -1,19 +1,15 @@
 package com.gni.banking.Repository;
 
+
 import com.gni.banking.Model.User;
-<<<<<<< Updated upstream
-=======
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
->>>>>>> Stashed changes
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-<<<<<<< Updated upstream
-@Repository
-public interface UserRepository extends CrudRepository<User, Long> {
-    // Add custom repository methods if needed
-=======
 
+import java.lang.reflect.Array;
 import java.util.List;
 
 import java.util.Optional;
@@ -21,8 +17,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<User,Long> {
 
-	@Query("SELECT u FROM User u WHERE u.id = :id")
-	Optional<User> findById(long id);
+    Optional<User> findById(long id);
 
 
 	@Query("SELECT dayLimit FROM User WHERE id = :userId")
@@ -43,7 +38,4 @@ public interface UserRepository extends CrudRepository<User,Long> {
 
 	Optional<User> findUserByUsername(String username);
 
-	boolean existsByUsername(String username);
-
->>>>>>> Stashed changes
 }

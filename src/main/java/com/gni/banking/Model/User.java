@@ -1,21 +1,22 @@
 package com.gni.banking.Model;
+
 import com.gni.banking.Enums.Role;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-<<<<<<< Updated upstream
-import jakarta.persistence.GenerationType;
-=======
->>>>>>> Stashed changes
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.*;
 
 @Entity
+@Table(name = "Users")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Data
 public class User {
+
     @Id
-<<<<<<< Updated upstream
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-=======
-    @GeneratedValue
     private long id;
 
     private String username;
@@ -23,113 +24,14 @@ public class User {
     private String email;
     private long phoneNumber;
     private String address;
->>>>>>> Stashed changes
 
     private String firstName;
     private String lastName;
-    private String email;
-    private int phoneNumber;
-    private String password;
-    private Role role;
-    private double transactionLimit;
+    private Role roles;
+    private boolean active;
     private double dayLimit;
-    private int accountCount;
+    private double transactionLimit;
+    private int numberofaccounts;
+    private double dailyTransaction;
 
-    // Constructors
-    public User() {
-    }
-
-    public User(String firstName, String lastName, String email, int phoneNumber, String password, Role role,
-                double transactionLimit, double dayLimit, int accountCount) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.password = password;
-        this.role = role;
-        this.transactionLimit = transactionLimit;
-        this.dayLimit = dayLimit;
-        this.accountCount = accountCount;
-    }
-
-    // Getters and setters
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public int getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(int phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public double getTransactionLimit() {
-        return transactionLimit;
-    }
-
-    public void setTransactionLimit(double transactionLimit) {
-        this.transactionLimit = transactionLimit;
-    }
-
-    public double getDayLimit() {
-        return dayLimit;
-    }
-
-    public void setDayLimit(double dayLimit) {
-        this.dayLimit = dayLimit;
-    }
-
-    public int getAccountCount() {
-        return accountCount;
-    }
-
-    public void setAccountCount(int accountCount) {
-        this.accountCount = accountCount;
-    }
 }
