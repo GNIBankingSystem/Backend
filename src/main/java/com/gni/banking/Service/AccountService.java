@@ -101,14 +101,14 @@ public class AccountService {
 
     }
 
-    public Account add(PostAccountDTO accountRequest) {
+    public Account add(PostAccountDTO accountRequest) throws Exception {
         Account a = new Account();
         a.setId(ibanService.GenerateIban());
         String iban = ibanService.GenerateIban();
         a.setId(iban);
         a.setUserId(accountRequest.getUserId());
         a.setType(accountRequest.getType());
-        a.setAbsoluteLimit(2000.00);
+        a.setAbsoluteLimit(0.00);
         a.setCurrency(Currency.EUR);
         a.setBalance(0.00);
         a.setStatus(Status.Open);

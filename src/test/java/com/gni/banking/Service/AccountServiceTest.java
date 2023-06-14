@@ -34,7 +34,7 @@ public class AccountServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    private Account getMockAccount(int userId, AccountType type) {
+    private Account getMockAccount(int userId, AccountType type) throws Exception {
         Account account = new Account();
         account.setId("NL01INHO0000000091");
         account.setBalance(10000);
@@ -46,7 +46,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testAdd_AccountCreation_Success() {
+    public void testAdd_AccountCreation_Success() throws Exception {
         // Arrange
         PostAccountDTO accountRequest = new PostAccountDTO();
         accountRequest.setUserId(1);
