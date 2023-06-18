@@ -58,9 +58,11 @@ public class TransactionController {
             return ResponseEntity.ok(modelMapper.map(transaction, TransactionResponseDTO.class));
     }
 
+
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     public ResponseEntity<?> add(@RequestBody TransactionRequestDTO transactionRequestDTO, HttpServletRequest request) throws Exception {
             Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
             transaction.setType(TransactionType.TRANSFER);

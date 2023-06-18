@@ -9,6 +9,10 @@ import com.gni.banking.Service.AccountService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreFilter;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,13 +40,25 @@ public class AccountController {
 
     }
 
+
     @GetMapping
-    public List<Account> getAllAccounts(@RequestParam(defaultValue = "0") int offset,
+    public List<Account> getAllAccounts(Authentication authentication,
+                                        @RequestParam(defaultValue = "0") int offset,
                                         @RequestParam(defaultValue = "10") int limit,
                                         @RequestParam(required = false) String userId,
                                         @RequestParam(required = false) String type,
                                         @RequestParam(required = false) String status) throws Exception {
-        return service.getAll(limit, offset, userId, type, status);
+        if (authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_CUSTOMER"))) {
+            // Retrieve only the customer's accounts
+            List<Account> accounts = service.getAll(limit, offset, authentication.getId(), type, status);
+            return accounts;
+        } else {
+            // Retrieve all accounts
+            List<Account> accounts = service.getAll(limit, offset, userId, type, status);
+            return accounts;
+            //return service.getAll(limit, offset, userId, type, status);
+        }
     }
 
     @GetMapping("/{id}")

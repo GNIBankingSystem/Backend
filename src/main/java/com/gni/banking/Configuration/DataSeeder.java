@@ -58,7 +58,7 @@ public class DataSeeder implements ApplicationRunner {
         user2.setLastName("jhonsen");
         user2.setPassword("customer");
         user2.setPhoneNumber(612345678);
-        user2.setRoles(ROLE_EMPLOYEE);
+        user2.setRoles(ROLE_CUSTOMER);
         user2.setTransactionLimit(1000.00);
         user2.setDailyTransaction(0);
         userService.add(user2);
@@ -105,6 +105,11 @@ public class DataSeeder implements ApplicationRunner {
         account1.setType(AccountType.Savings);
         accountService.add(account1);
 
+        PostAccountDTO account11 = new PostAccountDTO();
+        account11.setUserId(1);
+        account11.setType(AccountType.Current);
+        accountService.add(account11);
+
         PostAccountDTO account22 = new PostAccountDTO();
         account2.setUserId(2);
         account2.setType(AccountType.Current);
@@ -130,6 +135,17 @@ public class DataSeeder implements ApplicationRunner {
         transaction1.setType(TransactionType.TRANSFER);
         transaction1.setArchived(false);
         transactionService.add(transaction1);
+
+        Transaction transaction2 = new Transaction();
+        transaction2.setId(2);
+        transaction2.setTimestamp(new Date());
+        transaction2.setAccountFrom("NL01INHO0000000001");
+        transaction2.setAccountTo("NL01INHO0000000011");
+        transaction2.setAmount(100);
+        transaction2.setPerformedBy(1);
+        transaction2.setType(TransactionType.TRANSFER);
+        transaction2.setArchived(false);
+        transactionService.add(transaction2);
 
 
     }
