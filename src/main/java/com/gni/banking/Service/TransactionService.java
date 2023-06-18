@@ -4,6 +4,7 @@ import com.gni.banking.Enums.AccountType;
 import com.gni.banking.Enums.Status;
 import com.gni.banking.Exceptions.*;
 import com.gni.banking.Model.Account;
+import com.gni.banking.Model.TodaysDate;
 import com.gni.banking.Model.Transaction;
 import com.gni.banking.Repository.TransactionRepository;
 import jakarta.transaction.Transactional;
@@ -181,8 +182,9 @@ public class TransactionService {
         //list met accounts --> hier de iban van gebruiken
         List<Account> accountsOfUser = accountService.getCurrentAndOpenAccountsByUserId(userId);
         double totalAmountTransferred = 0;
+        TodaysDate date = new TodaysDate();
         for(Account account : accountsOfUser){
-            List<Double> amountOfTransactions = repository.todaysTransactionOfUser(account.getId(), startDate(), endDate());
+            List<Double> amountOfTransactions = repository.todaysTransactionOfUser(account.getId(), date.getBeginDate(), date.getEndDate());
             for(Double amount : amountOfTransactions){
                 totalAmountTransferred += amount;
             }
