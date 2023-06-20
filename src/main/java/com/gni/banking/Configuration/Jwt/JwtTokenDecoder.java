@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -39,5 +40,18 @@ public class JwtTokenDecoder {
     }
 
 
+    public String getRoleInToken(HttpServletRequest request) {
+        //get token from header
+        String token = getTokenFromHeader(request);
+        System.out.println(token);
 
+        Jws<Claims> claimsJws = Jwts.parserBuilder()
+                .setSigningKey(jwtKeyProvider.getPrivateKey())
+                .build()
+                .parseClaimsJws(token);
+
+        // Extract user ID from 'id' claim
+        String role = (String) claimsJws.getBody().get("auth");
+        return role;
+    }
 }

@@ -76,9 +76,9 @@ public class AccountService {
 
         if (accountStatus != null)
             return accountRepository.findByStatus(accountStatus, pageable);
-
+        //TODO userId is not accessible op 1 zetten
         if (userId != null) {
-            if (Integer.parseInt(userId) == 1) {
+            if (Integer.parseInt(userId) == 0) {
                 throw new IllegalArgumentException("UserId is inaccessible");
             }
             return accountRepository.findByUserId(userId, pageable);
