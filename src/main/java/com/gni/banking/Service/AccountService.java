@@ -54,42 +54,49 @@ public class AccountService {
         return accountType;
     }
 
-    public List<Account> getAll(int limit, int offset, String userId, String type, String status) throws Exception {
+    private List<Account> getAccounts(Long userId, AccountType accountType, Status accountStatus, Pageable pageable) {
+        //check for parameters and return the correct list
+        if (userId != null && accountType != null && accountStatus != null){
+            CheckUserId(userId);
+            return accountRepository.findByUserIdAndTypeAndStatus(userId, accountType, accountStatus, pageable);
+        } else if (userId != null && accountType != null) {
+            CheckUserId(userId);
+            return accountRepository.findByUserIdAndType(userId, accountType, pageable);
+        } else if (userId != null && accountStatus != null){
+            CheckUserId(userId);
+            return accountRepository.findByUserIdAndStatus(userId, accountStatus, pageable);
+        } else if (accountType != null && accountStatus != null) {
+            return accountRepository.findByTypeAndStatus(accountType, accountStatus, pageable);
+        } else if (accountStatus != null) {
+            return accountRepository.findByStatus(accountStatus, pageable);
+        } else if (userId != null) {
+            CheckUserId(userId);
+            return accountRepository.findByUserId(userId, pageable);
+        } else if (accountType != null) {
+            return accountRepository.findByType(accountType, pageable);
+        } else {
+            return accountRepository.findAll(pageable);
+        }
+    }
+
+    private static void CheckUserId(Long userId) {
+        if (userId == 0) {
+            throw new IllegalArgumentException("UserId is inaccessible");
+        }
+        else if (userId < 0) {
+            throw new IllegalArgumentException("UserId is negative");
+        }
+    }
+
+    public List<Account> getAll(int limit, int offset, Long userId, String type, String status) throws Exception {
         //initialize variables
         Pageable pageable = PageRequest.of(offset, limit);
         AccountType accountType = getAccountType(type);
         Status accountStatus = getStatus(status);
 
-
-        //check for parameters and return the correct list
-        if (userId != null && accountType != null && accountStatus != null)
-            return accountRepository.findByUserIdAndTypeAndStatus(userId, accountType, accountStatus, pageable);
-
-        if (userId != null && accountType != null)
-            return accountRepository.findByUserIdAndType(userId, accountType, pageable);
-
-        if (userId != null && accountStatus != null)
-            return accountRepository.findByUserIdAndStatus(userId, accountStatus, pageable);
-
-        if (accountType != null && accountStatus != null)
-            return accountRepository.findByTypeAndStatus(accountType, accountStatus, pageable);
-
-        if (accountStatus != null)
-            return accountRepository.findByStatus(accountStatus, pageable);
-        //TODO userId is not accessible op 1 zetten
-        if (userId != null) {
-            if (Integer.parseInt(userId) == 0) {
-                throw new IllegalArgumentException("UserId is inaccessible");
-            }
-            return accountRepository.findByUserId(userId, pageable);
-        }
-
-        if (accountType != null)
-            return accountRepository.findByType(accountType, pageable);
-
-
-        return accountRepository.findAll(pageable);
+        return getAccounts(userId, accountType, accountStatus, pageable);
     }
+
 
     public Account getById(String id) {
         return accountRepository.findById(id).orElseThrow();

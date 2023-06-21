@@ -56,7 +56,7 @@ public class AccountController {
     public List<Account> getAllAccounts(HttpServletRequest request,
                                         @RequestParam(defaultValue = "0") int offset,
                                         @RequestParam(defaultValue = "10") int limit,
-                                        @RequestParam(required = false) String userId,
+                                        @RequestParam(required = false) Long userId,
                                         @RequestParam(required = false) String type,
                                         @RequestParam(required = false) String status) throws Exception {
 
@@ -66,7 +66,7 @@ public class AccountController {
                 return service.getAll(limit, offset, userId, type, status);
             }else if(userRole.equals("ROLE_CUSTOMER")){
                 long idOfUser = jwtTokenDecoder.getIdInToken(request);
-                return service.getAll(limit, offset, String.valueOf(idOfUser), type, status);
+                return service.getAll(limit, offset, idOfUser, type, status);
             }else{
                 throw new Exception("You are not authorized to access this resource");
             }

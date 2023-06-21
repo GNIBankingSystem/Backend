@@ -81,7 +81,7 @@ public class DataSeeder implements ApplicationRunner {
 
 
         Account account = new Account();
-        account.setUserId(1);
+        account.setUserId(0);
         account.setType(AccountType.Current);
         account.setCurrency(Currency.EUR);
         account.setBalance(550000000);
@@ -125,7 +125,7 @@ public class DataSeeder implements ApplicationRunner {
         account4.setType(AccountType.Savings);
         accountService.add(account4);
 
-        Transaction transaction1 = new Transaction();
+        /*Transaction transaction1 = new Transaction();
         transaction1.setId(1);
         transaction1.setTimestamp(new Date());
         transaction1.setAccountFrom("NL01INHO0000000001");
@@ -145,7 +145,7 @@ public class DataSeeder implements ApplicationRunner {
         transaction2.setPerformedBy(1);
         transaction2.setType(TransactionType.TRANSFER);
         transaction2.setArchived(false);
-        transactionService.add(transaction2);
+        transactionService.add(transaction2);*/
 
 
     }

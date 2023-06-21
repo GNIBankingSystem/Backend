@@ -35,20 +35,20 @@ public interface AccountRepository extends CrudRepository<Account, String> {
 
     List<Account> findAll(Pageable pageable);
 
-    List<Account> findByUserId(String userId, Pageable pageable);
+    List<Account> findByUserId(long userId, Pageable pageable);
 
     @Query("SELECT userId FROM Account WHERE id = :iban")
     int getUserIdById(@Param("iban")String iban);
 
     List<Account> findByType(AccountType type, Pageable pageable);
 
-    List<Account> findByUserIdAndType(String userId, AccountType accountType, Pageable pageable);
+    List<Account> findByUserIdAndType(long userId, AccountType accountType, Pageable pageable);
 
     List<Account> findByStatus(Status accountStatus, Pageable pageable);
 
-    List<Account> findByUserIdAndStatus(String userId, Status accountStatus, Pageable pageable);
+    List<Account> findByUserIdAndStatus(long userId, Status accountStatus, Pageable pageable);
 
-    List<Account> findByUserIdAndTypeAndStatus(String userId, AccountType accountType, Status accountStatus, Pageable pageable);
+    List<Account> findByUserIdAndTypeAndStatus(long userId, AccountType accountType, Status accountStatus, Pageable pageable);
 
     List<Account> findByTypeAndStatus(AccountType accountType, Status accountStatus, Pageable pageable);
 }

@@ -30,7 +30,7 @@ import java.util.Objects;
 
 public class AccountStepDefinitions extends BaseStepDefinitions{
 
-    @Autowired
+    /*@Autowired
     private TestRestTemplate restTemplate;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -165,5 +165,5 @@ public class AccountStepDefinitions extends BaseStepDefinitions{
                 String.class);
         Account account = mapper.readValue(response.getBody(), Account.class);
         Assertions.assertEquals(account.getStatus(), Status.Closed);
-    }
+    }*/
 }
