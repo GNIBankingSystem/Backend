@@ -118,7 +118,12 @@ public class AccountService {
     public Account add(PostAccountDTO accountRequest) throws Exception {
         Account a = new Account();
         a.setId(ibanService.GenerateIban());
-        a.setUserId(accountRequest.getUserId());
+        //checks if the user exists
+        if (userService.getById(accountRequest.getUserId()) == null) {
+            throw new IllegalArgumentException("UserId does not have a user");
+        } else {
+            a.setUserId(accountRequest.getUserId());
+        }
         a.setType(accountRequest.getType());
         a.setAbsoluteLimit(0.00);
         a.setCurrency(Currency.EUR);
@@ -149,11 +154,7 @@ public class AccountService {
 
     public Account changeStatus(String iban) {
         Account existingAccount = getByIban(iban);
-        if (existingAccount.getStatus().toString().equals("Open")) {
-            existingAccount.setStatus(com.gni.banking.Enums.Status.Closed);
-        } else {
-            existingAccount.setStatus(com.gni.banking.Enums.Status.Open);
-        }
+        existingAccount.setStatus(com.gni.banking.Enums.Status.Closed);
         return accountRepository.save(existingAccount);
     }
 

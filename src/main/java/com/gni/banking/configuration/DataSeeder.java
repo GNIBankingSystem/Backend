@@ -85,7 +85,7 @@ public class DataSeeder implements ApplicationRunner {
         account.setType(AccountType.Current);
         account.setCurrency(Currency.EUR);
         account.setBalance(550000000);
-        account.setAbsoluteLimit(100000);
+        account.setAbsoluteLimit(1000000);
         account.setStatus(Status.Open);
         account.setId("NL01INHO0000000001");
         accountService.addCompleteAccount(account);
@@ -95,35 +95,20 @@ public class DataSeeder implements ApplicationRunner {
         account2.setType(AccountType.Current);
         account2.setCurrency(Currency.EUR);
         account2.setBalance(550000000);
-        account2.setAbsoluteLimit(100000000);
+        account2.setAbsoluteLimit(10000000);
         account2.setStatus(Status.Open);
         account2.setId("NL01INHO0000000011");
         accountService.addCompleteAccount(account2);
 
-        PostAccountDTO account1 = new PostAccountDTO();
-        account1.setUserId(1);
-        account1.setType(AccountType.Savings);
-        accountService.add(account1);
-
-        PostAccountDTO account11 = new PostAccountDTO();
-        account11.setUserId(1);
-        account11.setType(AccountType.Current);
-        accountService.add(account11);
-
-        PostAccountDTO account22 = new PostAccountDTO();
-        account2.setUserId(2);
-        account2.setType(AccountType.Current);
-        accountService.add(account22);
-
-        PostAccountDTO account3 = new PostAccountDTO();
+        Account account3 = new Account();
         account3.setUserId(2);
         account3.setType(AccountType.Current);
-        accountService.add(account3);
-
-        PostAccountDTO account4 = new PostAccountDTO();
-        account4.setUserId(2);
-        account4.setType(AccountType.Savings);
-        accountService.add(account4);
+        account3.setCurrency(Currency.EUR);
+        account3.setBalance(29.40);
+        account3.setAbsoluteLimit(0);
+        account3.setStatus(Status.Open);
+        account3.setId("NL01INHO0000000012");
+        accountService.addCompleteAccount(account3);
 
         /*Transaction transaction1 = new Transaction();
         transaction1.setId(1);
