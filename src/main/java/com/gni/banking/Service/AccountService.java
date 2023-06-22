@@ -118,12 +118,7 @@ public class AccountService {
     public Account add(PostAccountDTO accountRequest) throws Exception {
         Account a = new Account();
         a.setId(ibanService.GenerateIban());
-        //checks if the user exists
-        if (userService.getById(accountRequest.getUserId()) == null) {
-            throw new IllegalArgumentException("UserId does not have a user");
-        } else {
-            a.setUserId(accountRequest.getUserId());
-        }
+        CheckAndSetUserId(accountRequest, a);
         a.setType(accountRequest.getType());
         a.setAbsoluteLimit(0.00);
         a.setCurrency(Currency.EUR);
@@ -131,6 +126,15 @@ public class AccountService {
         a.setStatus(Status.Open);
 
         return accountRepository.save(a);
+    }
+
+    private void CheckAndSetUserId(PostAccountDTO accountRequest, Account a) {
+        //checks if the user exists
+        if (userService.getById(accountRequest.getUserId()) == null) {
+            throw new IllegalArgumentException("UserId does not have a user");
+        } else {
+            a.setUserId(accountRequest.getUserId());
+        }
     }
 
     public Account addCompleteAccount(Account account) {
