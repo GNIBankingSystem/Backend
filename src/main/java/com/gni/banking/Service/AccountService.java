@@ -54,26 +54,54 @@ public class AccountService {
     private List<Account> getAccounts(Long userId, AccountType accountType, Status accountStatus, Pageable pageable, String firstNameLastName) {
         //check for parameters and return the correct list
         if (userId != null && accountType != null && accountStatus != null){
-            CheckUserId(userId);
-            return accountRepository.findByUserIdAndTypeAndStatus(userId, accountType, accountStatus, pageable);
+            return GetAccountsWithAllFilters(userId, accountType, accountStatus, pageable);
         } else if (userId != null && accountType != null) {
-            CheckUserId(userId);
-            return accountRepository.findByUserIdAndType(userId, accountType, pageable);
+            return GetAccountsWithUserIdAndAccountTypeFilters(userId, accountType, pageable);
         } else if (userId != null && accountStatus != null){
-            CheckUserId(userId);
-            return accountRepository.findByUserIdAndStatus(userId, accountStatus, pageable);
+            return getAccountsWithUserIdAndAccountStatusFilters(userId, accountStatus, pageable);
         } else if (accountType != null && accountStatus != null) {
-            return accountRepository.findByTypeAndStatus(accountType, accountStatus, pageable);
+            return getAccountsWithAccountTypeAndAccountStatusFilters(accountType, accountStatus, pageable);
         } else if (accountStatus != null) {
-            return accountRepository.findByStatus(accountStatus, pageable);
+            return getAccountsWithAccountStatusFilter(accountStatus, pageable);
         } else if (userId != null) {
-            CheckUserId(userId);
-            return accountRepository.findByUserId(userId, pageable);
+            return getAccountsWithUserIdFilter(userId, pageable);
         } else if (accountType != null) {
-            return accountRepository.findByType(accountType, pageable);
+            return getAccountsWithAccountTypeFilter(accountType, pageable);
         } else {
             return accountRepository.findAll(pageable);
         }
+    }
+
+    private List<Account> getAccountsWithAccountTypeFilter(AccountType accountType, Pageable pageable) {
+        return accountRepository.findByType(accountType, pageable);
+    }
+
+    private List<Account> getAccountsWithUserIdFilter(Long userId, Pageable pageable) {
+        CheckUserId(userId);
+        return accountRepository.findByUserId(userId, pageable);
+    }
+
+    private List<Account> getAccountsWithAccountStatusFilter(Status accountStatus, Pageable pageable) {
+        return accountRepository.findByStatus(accountStatus, pageable);
+    }
+
+    private List<Account> getAccountsWithAccountTypeAndAccountStatusFilters(AccountType accountType, Status accountStatus, Pageable pageable) {
+        return accountRepository.findByTypeAndStatus(accountType, accountStatus, pageable);
+    }
+
+    private List<Account> getAccountsWithUserIdAndAccountStatusFilters(Long userId, Status accountStatus, Pageable pageable) {
+        CheckUserId(userId);
+        return accountRepository.findByUserIdAndStatus(userId, accountStatus, pageable);
+    }
+
+    private List<Account> GetAccountsWithUserIdAndAccountTypeFilters(Long userId, AccountType accountType, Pageable pageable) {
+        CheckUserId(userId);
+        return accountRepository.findByUserIdAndType(userId, accountType, pageable);
+    }
+
+    private List<Account> GetAccountsWithAllFilters(Long userId, AccountType accountType, Status accountStatus, Pageable pageable) {
+        CheckUserId(userId);
+        return accountRepository.findByUserIdAndTypeAndStatus(userId, accountType, accountStatus, pageable);
     }
 
     public List<IbanAccountDTO> findByFirstNameLastName(String firstNameLastName) throws Exception {
