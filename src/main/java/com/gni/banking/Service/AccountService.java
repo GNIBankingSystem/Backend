@@ -3,10 +3,7 @@ package com.gni.banking.Service;
 import com.gni.banking.Enums.AccountType;
 import com.gni.banking.Enums.Currency;
 import com.gni.banking.Enums.Status;
-import com.gni.banking.Model.Account;
-import com.gni.banking.Model.PostAccountDTO;
-import com.gni.banking.Model.PutAccountDTO;
-import com.gni.banking.Model.User;
+import com.gni.banking.Model.*;
 import com.gni.banking.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -54,7 +51,7 @@ public class AccountService {
         return accountType;
     }
 
-    private List<Account> getAccounts(Long userId, AccountType accountType, Status accountStatus, Pageable pageable) {
+    private List<Account> getAccounts(Long userId, AccountType accountType, Status accountStatus, Pageable pageable, String firstNameLastName) {
         //check for parameters and return the correct list
         if (userId != null && accountType != null && accountStatus != null){
             CheckUserId(userId);
@@ -79,6 +76,18 @@ public class AccountService {
         }
     }
 
+    public List<IbanAccountDTO> findByFirstNameLastName(String firstNameLastName) throws Exception {
+        List<IbanAccountDTO> ibans = getIbanByName(firstNameLastName);
+        //List<IbanAccountDTO> accounts = new ArrayList<>();
+        /*for(String iban : ibans){
+            IbanAccountDTO account = new IbanAccountDTO();
+            account.setId(iban);
+            account.set;
+            accounts.add(account);
+        }*/
+        return ibans;
+    }
+
     private static void CheckUserId(Long userId) {
         if (userId == 0) {
             throw new IllegalArgumentException("UserId is inaccessible");
@@ -88,13 +97,13 @@ public class AccountService {
         }
     }
 
-    public List<Account> getAll(int limit, int offset, Long userId, String type, String status) throws Exception {
+    public List<Account> getAll(int limit, int offset, Long userId, String type, String status, String firstNameLastName) throws Exception {
         //initialize variables
         Pageable pageable = PageRequest.of(offset, limit);
         AccountType accountType = getAccountType(type);
         Status accountStatus = getStatus(status);
 
-        return getAccounts(userId, accountType, accountStatus, pageable);
+        return getAccounts(userId, accountType, accountStatus, pageable, firstNameLastName);
     }
 
 
@@ -148,27 +157,48 @@ public class AccountService {
         return accountRepository.save(existingAccount);
     }
 
-    public List<String> getIbanByName(String name) {
-        String firstname = name.split("_")[0];
-        String lastName = name.split("_")[1];
+    public List<IbanAccountDTO> getIbanByName(String name) {
+        String[] names = name.split(" ");
+        String firstname = names[0];
+        String lastName = names[1];
+        for(int i = 2; i < names.length; i++){
+            lastName += " " + names[i];
+        }
+
         List<User> Users = userService.findByFirstNameAndLastName(firstname, lastName);
+        if(Users.isEmpty()){
+            throw new IllegalArgumentException("User not found");
+        }
         List<Account> accounts = new ArrayList<>();
         Users.forEach(user -> {
             List<Account> account = accountRepository.getIdByUserId((int) user.getId());
             accounts.addAll(account);
         });
 
-        List<String> ibans = new ArrayList<>();
+
+        List<IbanAccountDTO> ibans = new ArrayList<>();
         List<Account> usableAccounts = new ArrayList<>();
         accounts.forEach(account -> {
             if (account.getStatus() == com.gni.banking.Enums.Status.Open && account.getType() == com.gni.banking.Enums.AccountType.Current) {
                 usableAccounts.add(account);
             }
         });
+        if(usableAccounts.isEmpty()){
+            throw new IllegalArgumentException("No accounts found");
+        }
 
+        String finalLastName = lastName;
         usableAccounts.forEach(account -> {
-            ibans.add(account.getId());
+            IbanAccountDTO iban = new IbanAccountDTO();
+            iban.setId(account.getId());
+            iban.setFirstName(firstname);
+            iban.setLastName(finalLastName);
+            ibans.add(iban);
         });
+
+        if(ibans.isEmpty()){
+            throw new IllegalArgumentException("No accounts found");
+        }
         return ibans;
     }
 

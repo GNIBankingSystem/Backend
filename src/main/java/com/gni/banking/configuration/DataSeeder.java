@@ -70,7 +70,7 @@ public class DataSeeder implements ApplicationRunner {
         user3.setEmail("pietervenema@gmail.com");
         user3.setUsername("employee");
         user3.setFirstName("pieter");
-        user3.setLastName("jhonsen");
+        user3.setLastName("van der venema");
         user3.setPassword("employee");
         user3.setPhoneNumber(612345678);
         user3.setRoles(ROLE_EMPLOYEE);
@@ -91,7 +91,7 @@ public class DataSeeder implements ApplicationRunner {
         accountService.addCompleteAccount(account);
 
         Account account2 = new Account();
-        account2.setUserId(1);
+        account2.setUserId(3);
         account2.setType(AccountType.Current);
         account2.setCurrency(Currency.EUR);
         account2.setBalance(550000000);

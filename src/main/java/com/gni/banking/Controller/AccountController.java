@@ -4,6 +4,7 @@ package com.gni.banking.Controller;
 
 import com.gni.banking.Configuration.Jwt.JwtTokenDecoder;
 import com.gni.banking.Model.Account;
+import com.gni.banking.Model.IbanAccountDTO;
 import com.gni.banking.Model.PostAccountDTO;
 import com.gni.banking.Model.PutAccountDTO;
 import com.gni.banking.Service.AccountService;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLOutput;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -53,20 +55,25 @@ public class AccountController {
 
 
     @GetMapping
-    public List<Account> getAllAccounts(HttpServletRequest request,
+    public List<?> getAllAccounts(HttpServletRequest request,
                                         @RequestParam(defaultValue = "0") int offset,
                                         @RequestParam(defaultValue = "10") int limit,
                                         @RequestParam(required = false) Long userId,
                                         @RequestParam(required = false) String type,
-                                        @RequestParam(required = false) String status) throws Exception {
+                                        @RequestParam(required = false) String status,
+                                        @RequestParam(required = false) String firstNameLastName) throws Exception {
 
             String userRole = jwtTokenDecoder.getRoleInToken(request);
+            if (firstNameLastName != null) {
+                firstNameLastName = firstNameLastName.toLowerCase();
+                 return service.findByFirstNameLastName(firstNameLastName);
+            }
 
             if(userRole.equals("ROLE_EMPLOYEE")){
-                return service.getAll(limit, offset, userId, type, status);
+                return service.getAll(limit, offset, userId, type, status, firstNameLastName);
             }else if(userRole.equals("ROLE_CUSTOMER")){
                 long idOfUser = jwtTokenDecoder.getIdInToken(request);
-                return service.getAll(limit, offset, idOfUser, type, status);
+                return service.getAll(limit, offset, idOfUser, type, status, firstNameLastName);
             }else{
                 throw new Exception("You are not authorized to access this resource");
             }
@@ -81,7 +88,7 @@ public class AccountController {
             if(service.getById(id).getUserId() == idOfUser){
                 return service.getById(id);
             }else{
-                throw new Exception("You are not authorized to access this resource");
+                throw new IllegalArgumentException("You are not authorized to access this resource");
             }
         }else if(userRole.equals("ROLE_EMPLOYEE")) {
             return service.getById(id);
@@ -114,11 +121,5 @@ public class AccountController {
     @DeleteMapping("/{iban}")
     public Account changeStatus(@PathVariable String iban) {
         return service.changeStatus(iban);
-    }
-
-    //TODO deze mothode overzetten en iban als parameter gebruiken bij getall
-    @GetMapping("/getIban/{name}")
-    public List<String> getIbanByName(@PathVariable String name) throws Exception {
-        return service.getIbanByName(name);
     }
 }
