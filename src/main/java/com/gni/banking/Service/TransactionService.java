@@ -31,6 +31,7 @@ public class TransactionService {
     private UserService userService;
 
 
+
     public Page<Transaction> getAll(int limit, int offset, String iban) {
         Pageable pageable = PageRequest.of(offset, limit);
         if (Objects.equals(iban, "") || iban == null){
@@ -42,6 +43,11 @@ public class TransactionService {
             return repository.findTransactionsByIban(iban, cutoffDate, pageable);
         }
 
+    }
+
+    public Boolean accountFromIsOfUser(Transaction transaction, long userId){
+        Account accountFrom = accountService.getByIban(transaction.getAccountFrom());
+        return accountFrom.getUserId() == userId;
     }
 
     public Transaction getById(long id) {
@@ -103,7 +109,7 @@ public class TransactionService {
         System.out.println(accountFrom.getBalance());
         if (accountFrom.getBalance() < amount)
             throw new NotEnoughBalanceException("Not enough money on account");
-        if(accountFrom.getAbsoluteLimit() < amount)
+        if(accountFrom.getAbsoluteLimit() > accountFrom.getBalance() - amount)
             throw new LimitOnTransactionExceededException("Absolute limit exceeded");
         if (accountFrom.getCurrency() != accountTo.getCurrency())
             throw new InvalidAccountCurrenyOnTransactionException("You can't transfer money between accounts with different currencies");
@@ -155,26 +161,6 @@ public class TransactionService {
     public boolean underDayLimit(int userId, double amount){
         double amountTransferredToday = amountTransferredToday(userId);
         return amountTransferredToday + amount <= userService.getDayLimitById(userId);
-    }
-
-    Date startDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.add(Calendar.DAY_OF_MONTH, 0);
-        calendar.add(Calendar.MILLISECOND, 0);
-        return calendar.getTime();
-    }
-
-    Date endDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.add(Calendar.DAY_OF_MONTH, 0);
-        calendar.add(Calendar.MILLISECOND, 0);
-        return calendar.getTime();
     }
 
     public double amountTransferredToday(int userId){
