@@ -43,7 +43,6 @@ public class JwtTokenDecoder {
     public String getRoleInToken(HttpServletRequest request) {
         //get token from header
         String token = getTokenFromHeader(request);
-        System.out.println(token);
 
         Jws<Claims> claimsJws = Jwts.parserBuilder()
                 .setSigningKey(jwtKeyProvider.getPrivateKey())

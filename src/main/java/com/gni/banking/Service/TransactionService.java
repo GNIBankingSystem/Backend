@@ -62,6 +62,7 @@ public class TransactionService {
             List<Transaction> transactions = getAll(limit, offset, account.getId()).getContent();
             allTransactions.addAll(transactions);
         }
+
         int pageNumber = 0; // Example page number
         int pageSize = 10; // Example page size
 
