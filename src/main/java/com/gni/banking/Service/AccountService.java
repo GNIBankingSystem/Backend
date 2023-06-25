@@ -150,7 +150,7 @@ public class AccountService {
         a.setType(accountRequest.getType());
         a.setAbsoluteLimit(0.00);
         a.setCurrency(Currency.EUR);
-        a.setBalance(0.00);
+        a.setBalance(1000.00);
         a.setStatus(Status.Open);
 
         return accountRepository.save(a);

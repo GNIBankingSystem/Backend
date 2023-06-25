@@ -62,22 +62,31 @@ public class TransactionController {
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
+    //@PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     public ResponseEntity<?> add(@RequestBody TransactionRequestDTO transactionRequestDTO, HttpServletRequest request) throws Exception {
-            Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
-            transaction.setType(TransactionType.TRANSFER);
-            transaction.setPerformedBy(jwtTokenDecoder.getIdInToken(request));
-            System.out.println(transaction);
+
+        String userRole = jwtTokenDecoder.getRoleInToken(request);
+        long idOfUser = jwtTokenDecoder.getIdInToken(request);
+        Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
+        transaction.setType(TransactionType.TRANSFER);
+        transaction.setPerformedBy(jwtTokenDecoder.getIdInToken(request));
+        if(userRole.equals("ROLE_EMPLOYEE") || (userRole.equals("ROLE_CUSTOMER") && service.accountFromIsOfUser(transaction, idOfUser))){
             Transaction addedTransaction = service.add(transaction);
             return ResponseEntity.ok(modelMapper.map(addedTransaction, TransactionResponseDTO.class));
+        }else{
+            throw new IllegalArgumentException("You are not allowed to perform this action");
+        }
+
     }
 
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody TransactionPutDto transactionPutDto, @PathVariable long id) throws Exception {
             Transaction transaction = modelMapper.map(transactionPutDto, Transaction.class);
             return  ResponseEntity.ok(modelMapper.map(service.update(transaction, id), TransactionResponseDTO.class));
     }
 
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id){
         service.delete(id);
