@@ -4,6 +4,8 @@ import com.gni.banking.Enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 public class UserResponse {
@@ -11,6 +13,7 @@ public class UserResponse {
     private String username;
     private Role roles;
     private String token;
+    private Date usercreated;
 
 }
 

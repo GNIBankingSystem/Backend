@@ -48,7 +48,7 @@ public class UserController {
         return userService.getById(userId);
     }
 
-    @PostMapping
+    /*@PostMapping
     public ResponseEntity<UserResponse> add(@RequestBody User a) {
         User savedUser = a;
         userService.add(savedUser);
@@ -61,8 +61,8 @@ public class UserController {
         userResponse.setToken("Successfully registered");
         userResponse.setRoles(savedUser.getRoles());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
-    }
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+    }*/
 
 
 

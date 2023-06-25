@@ -85,6 +85,9 @@ public class UserService {
     public User add(User a) {
         String username = a.getUsername();
         System.out.println(a.getUsername());
+        a.setRoles(Role.ROLE_CUSTOMER);
+        a.setDailyTransaction(1000);
+        a.setDayLimit(1000);
         if (userRepository.findUserByUsername(username).isEmpty()) {
             // Validate username
             String usernameRegex = "^(?!.*\\s)(?=\\S+$).{4,12}$";
@@ -194,27 +197,5 @@ public class UserService {
         }
     }
 
-    public LoginResponseDTO register(User user) throws AuthenticationException {
-        // Check if the username is already taken
 
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new AuthenticationException("Username is already taken");
-        }
-
-        // Hash the password
-        String hashedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(hashedPassword);
-
-        // Set any default role or permissions
-        user.setRoles(Role.ROLE_CUSTOMER); //
-
-        // Save the user to the database
-        User savedUser = userRepository.save(user);
-
-        // Return a JWT to the client
-        LoginResponseDTO response = new LoginResponseDTO();
-        response.setToken("Successfully registered");
-
-        return response;
-    }
 }
