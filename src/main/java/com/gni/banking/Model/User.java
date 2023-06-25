@@ -21,6 +21,7 @@ import lombok.*;
 public class User {
 
     @Id
+    @GeneratedValue
     private long id;
 
     private String username;

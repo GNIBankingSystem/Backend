@@ -35,13 +35,12 @@ public class DataSeeder implements ApplicationRunner {
 
         User user1 = new User();
         user1.setId(2);
-        user1.setNumberofaccounts(1);
         user1.setDayLimit(3000.00);
         user1.setEmail("PieterVenema@gmail.com");
         user1.setUsername("admin");
         user1.setFirstName("pieter");
         user1.setLastName("venema");
-        user1.setPassword("admin");
+        user1.setPassword("P@ssw0rdAdmin1!");
         user1.setPhoneNumber(612345678);
         user1.setRoles(ROLE_EMPLOYEE);
         user1.setTransactionLimit(1000.00);
@@ -50,13 +49,12 @@ public class DataSeeder implements ApplicationRunner {
 
         User user2 = new User();
         user2.setId(1);
-        user2.setNumberofaccounts(1);
         user2.setDayLimit(3000.00);
         user2.setEmail("pietervenema@gmail.com");
         user2.setUsername("customer");
         user2.setFirstName("pieter");
         user2.setLastName("jhonsen");
-        user2.setPassword("customer");
+        user2.setPassword("Cust0m3r@cc3ss");
         user2.setPhoneNumber(612345678);
         user2.setRoles(ROLE_EMPLOYEE);
         user2.setTransactionLimit(1000.00);
@@ -65,13 +63,12 @@ public class DataSeeder implements ApplicationRunner {
 
         User user3 = new User();
         user3.setId(3);
-        user3.setNumberofaccounts(1);
         user3.setDayLimit(3000.00);
         user3.setEmail("pietervenema@gmail.com");
         user3.setUsername("employee");
         user3.setFirstName("pieter");
         user3.setLastName("jhonsen");
-        user3.setPassword("employee");
+        user3.setPassword("3mpl0yee#S3cur3");
         user3.setPhoneNumber(612345678);
         user3.setRoles(ROLE_EMPLOYEE);
         user3.setTransactionLimit(1000.00);

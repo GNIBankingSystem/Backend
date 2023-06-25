@@ -3,6 +3,7 @@ package com.gni.banking.Controller;
 
 import com.gni.banking.Model.Transaction;
 import com.gni.banking.Model.TransactionRequestDTO;
+import com.gni.banking.Model.UserResponse;
 import com.gni.banking.Service.TransactionService;
 import com.gni.banking.Service.UserService;
 import com.gni.banking.Model.User;
@@ -48,10 +49,23 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> add(@RequestBody User a) {
+    public ResponseEntity<UserResponse> add(@RequestBody User a) {
+        User savedUser = a;
+        userService.add(savedUser);
 
-        return ResponseEntity.status(201).body(userService.add(a));
+
+
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(savedUser.getId());
+        userResponse.setUsername(savedUser.getUsername());
+        userResponse.setToken("Successfully registered");
+        userResponse.setRoles(savedUser.getRoles());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
+
+
+
 
     @PutMapping("/{userid}")
     public User update(@RequestBody User user, @PathVariable long userid) throws Exception {

@@ -82,10 +82,9 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-<<<<<<< Updated upstream
-=======
     public User add(User a) {
         String username = a.getUsername();
+        System.out.println(a.getUsername());
         if (userRepository.findUserByUsername(username).isEmpty()) {
             // Validate username
             String usernameRegex = "^(?!.*\\s)(?=\\S+$).{4,12}$";
@@ -101,30 +100,33 @@ public class UserService {
             }
 
             a.setPassword(passwordEncoder.encode(password));
-            return userRepository.save(a);
+
+            // Generate and assign userId
+            long userId = generateUserId();
+            a.setId(userId);
+
+            User savedUser = userRepository.save(a);
+            return savedUser;
         }
         throw new IllegalArgumentException("Username is already taken.");
     }
 
 
 
->>>>>>> Stashed changes
+    private long generateUserId() {
+        long userId = 0;
+        while (userRepository.findById(userId).isPresent()) {
+            userId++;
+        }
+        return userId;
+    }
+
+
     public double getDayLimitById(int userId){
         return userRepository.getDayLimitById(userId);
     }
 
-    public User add(User user) {
-        Optional<User> existingUser = userRepository.findUserByUsername(user.getUsername());
-        if (existingUser.isEmpty()) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            if (user.getRoles() == null) {
-                user.setRoles(Role.ROLE_CUSTOMER);
-            }
-            return userRepository.save(user);
-        } else {
-            throw new IllegalArgumentException("Username is already taken");
-        }
-    }
+
 
     public User update(User a, long id) throws Exception {
         User existingUser = getById(id);
