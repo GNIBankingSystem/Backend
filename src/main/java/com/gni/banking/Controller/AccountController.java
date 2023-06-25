@@ -65,8 +65,7 @@ public class AccountController {
 
             String userRole = jwtTokenDecoder.getRoleInToken(request);
             if (firstNameLastName != null) {
-                firstNameLastName = firstNameLastName.toLowerCase();
-                 return service.findByFirstNameLastName(firstNameLastName);
+                 return service.findByFirstNameLastName(firstNameLastName.toLowerCase());
             }
 
             if(userRole.equals("ROLE_EMPLOYEE")){

@@ -78,13 +78,6 @@ public class AccountService {
 
     public List<IbanAccountDTO> findByFirstNameLastName(String firstNameLastName) throws Exception {
         List<IbanAccountDTO> ibans = getIbanByName(firstNameLastName);
-        //List<IbanAccountDTO> accounts = new ArrayList<>();
-        /*for(String iban : ibans){
-            IbanAccountDTO account = new IbanAccountDTO();
-            account.setId(iban);
-            account.set;
-            accounts.add(account);
-        }*/
         return ibans;
     }
 
