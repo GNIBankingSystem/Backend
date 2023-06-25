@@ -70,7 +70,7 @@ public class AccountController {
                  return service.findByFirstNameLastName(firstNameLastName);
             }
 
-            if(userRole.equals("ROLE_EMPLOYEE")){
+            if(userRole.equals("ROLE_EMPLOYEE") || userRole.equals("ROLE_ADMIN")){
                 return service.getAll(limit, offset, userId, type, status, firstNameLastName);
             }else if(userRole.equals("ROLE_CUSTOMER")){
                 long idOfUser = jwtTokenDecoder.getIdInToken(request);

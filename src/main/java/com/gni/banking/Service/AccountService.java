@@ -132,10 +132,10 @@ public class AccountService {
         Status accountStatus = getStatus(status);
 
         List<Account> accounts = getAccounts(userId, accountType, accountStatus, pageable, firstNameLastName);
-        return CheckListForBankAccount(accounts);
+        return CheckListForBanksOwnAccount(accounts);
     }
 
-    private List<Account> CheckListForBankAccount(List<Account> accounts) {
+    private List<Account> CheckListForBanksOwnAccount(List<Account> accounts) {
         if (accounts.size() != 0) {
             if (accounts.get(0).getId().equals("NL01INHO0000000001")) {
                 accounts.remove(0);
