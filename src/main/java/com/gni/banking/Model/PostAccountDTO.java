@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class PostAccountDTO {
-    private int userId;
+    private Long userId;
     private AccountType type;
 }

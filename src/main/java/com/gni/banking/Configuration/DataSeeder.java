@@ -110,6 +110,11 @@ public class DataSeeder implements ApplicationRunner {
         account3.setId("NL01INHO0000000012");
         accountService.addCompleteAccount(account3);
 
+        PostAccountDTO postAccountDTO = new PostAccountDTO();
+        postAccountDTO.setUserId(1L);
+        postAccountDTO.setType(AccountType.Current);
+        accountService.add(postAccountDTO);
+
         /*Transaction transaction1 = new Transaction();
         transaction1.setId(1);
         transaction1.setTimestamp(new Date());
