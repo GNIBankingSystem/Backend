@@ -2,6 +2,8 @@ package com.gni.banking.Model;
 
 import com.gni.banking.Enums.Role;
 
+import com.gni.banking.Enums.Status;
+import com.gni.banking.Enums.Userstatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,10 +31,9 @@ public class User {
     private String firstName;
     private String lastName;
     private Role roles;
-    private boolean active;
+    private Userstatus active;
     private double dayLimit;
     private double transactionLimit;
-    private int numberofaccounts;
     private double dailyTransaction;
 
 }
