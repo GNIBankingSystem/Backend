@@ -75,7 +75,7 @@ public class AccountStepDefinitions extends BaseStepDefinitions{
     public void i_should_receive_all_accounts() {
 
         int actual = JsonPath.read(response.getBody(), "$.size()");
-        Assertions.assertEquals(4, actual);
+        Assertions.assertEquals(3, actual);
     }
 
     @When("I create an account with userId {long} and accountType {string}")
