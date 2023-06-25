@@ -175,13 +175,13 @@ public class AccountServiceTest {
         Account existingAccount = getMockAccount(1L, AccountType.Savings);
         Pageable pageable = PageRequest.of(1, 10);
 
-        Mockito.when(accountRepository.findAll(pageable)).thenReturn(java.util.List.of(existingAccount));
+        Mockito.when(accountRepository.findByIdNot(pageable, "NL01INHO0000000001")).thenReturn(java.util.List.of(existingAccount));
 
         // Act
         java.util.List<Account> accounts = accountService.getAll(10, 1, null, null, null, null);
 
         // Assert
-        Mockito.verify(accountRepository, Mockito.times(1)).findAll(pageable);
+        Mockito.verify(accountRepository, Mockito.times(1)).findByIdNot(pageable, "NL01INHO0000000001");
         Assertions.assertEquals(1, accounts.size());
     }
 
