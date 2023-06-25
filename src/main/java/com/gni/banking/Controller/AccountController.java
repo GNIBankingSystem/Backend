@@ -54,21 +54,19 @@ public class AccountController {
 
         String userRole = jwtTokenDecoder.getRoleInToken(request);
         if (firstNameLastName != null) {
-            firstNameLastName = firstNameLastName.toLowerCase();
-            return service.findByFirstNameLastName(firstNameLastName);
+            return service.findByFirstNameLastName(firstNameLastName.toLowerCase());
         }
 
         if (userRole.equals("ROLE_EMPLOYEE") || userRole.equals("ROLE_ADMIN")) {
-            return service.getAll(limit, offset, userId, type, status, firstNameLastName);
+            return service.getAll(limit, offset, userId, type, status);
         } else if (userRole.equals("ROLE_CUSTOMER")) {
             long idOfUser = jwtTokenDecoder.getIdInToken(request);
-            return service.getAll(limit, offset, idOfUser, type, status, firstNameLastName);
+            return service.getAll(limit, offset, idOfUser, type, status);
         } else {
             throw new Exception("You are not authorized to access this resource");
         }
     }
 
-    //@PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @GetMapping("/{id}")
     public ResponseEntity<?> getAccountById(HttpServletRequest request, @PathVariable String id) throws Exception {
         String userRole = jwtTokenDecoder.getRoleInToken(request);

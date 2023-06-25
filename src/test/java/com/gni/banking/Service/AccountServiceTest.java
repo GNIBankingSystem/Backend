@@ -178,7 +178,7 @@ public class AccountServiceTest {
         Mockito.when(accountRepository.findByIdNot(pageable, "NL01INHO0000000001")).thenReturn(java.util.List.of(existingAccount));
 
         // Act
-        java.util.List<Account> accounts = accountService.getAll(10, 1, null, null, null, null);
+        java.util.List<Account> accounts = accountService.getAll(10, 1, null, null, null);
 
         // Assert
         Mockito.verify(accountRepository, Mockito.times(1)).findByIdNot(pageable, "NL01INHO0000000001");
@@ -194,7 +194,7 @@ public class AccountServiceTest {
         Mockito.when(accountRepository.findByUserIdAndTypeAndStatus(2, AccountType.Savings, Status.Open, pageable)).thenReturn(java.util.List.of(existingAccount));
 
         // Act
-        java.util.List<Account> accounts = accountService.getAll(10, 1, 2L, "Savings", "Open", null);
+        java.util.List<Account> accounts = accountService.getAll(10, 1, 2L, "Savings", "Open");
 
         // Assert
         Mockito.verify(accountRepository, Mockito.times(1)).findByUserIdAndTypeAndStatus(2, AccountType.Savings, Status.Open, pageable);
@@ -210,7 +210,7 @@ public class AccountServiceTest {
         Mockito.when(accountRepository.findByTypeAndStatus(AccountType.Savings, Status.Open, pageable)).thenReturn(java.util.List.of(existingAccount));
 
         // Act
-        java.util.List<Account> accounts = accountService.getAll(10, 1, null, "Savings", "Open", null);
+        java.util.List<Account> accounts = accountService.getAll(10, 1, null, "Savings", "Open");
 
         // Assert
         Mockito.verify(accountRepository, Mockito.times(1)).findByTypeAndStatus(AccountType.Savings, Status.Open, pageable);
@@ -226,7 +226,7 @@ public class AccountServiceTest {
         Mockito.when(accountRepository.findByUserIdAndStatus(2, Status.Open, pageable)).thenReturn(java.util.List.of(existingAccount));
 
         // Act
-        java.util.List<Account> accounts = accountService.getAll(10, 1, 2L, null, "Open", null);
+        java.util.List<Account> accounts = accountService.getAll(10, 1, 2L, null, "Open");
 
         // Assert
         Mockito.verify(accountRepository, Mockito.times(1)).findByUserIdAndStatus(2, Status.Open, pageable);
@@ -242,7 +242,7 @@ public class AccountServiceTest {
         Mockito.when(accountRepository.findByUserIdAndType(2, AccountType.Savings, pageable)).thenReturn(java.util.List.of(existingAccount));
 
         // Act
-        java.util.List<Account> accounts = accountService.getAll(10, 1, 2L, "Savings", null, null);
+        java.util.List<Account> accounts = accountService.getAll(10, 1, 2L, "Savings", null);
 
         // Assert
         Mockito.verify(accountRepository, Mockito.times(1)).findByUserIdAndType(2, AccountType.Savings, pageable);
@@ -258,7 +258,7 @@ public class AccountServiceTest {
         Mockito.when(accountRepository.findByStatus(Status.Open, pageable)).thenReturn(java.util.List.of(existingAccount));
 
         // Act
-        java.util.List<Account> accounts = accountService.getAll(10, 1, null, null, "Open", null);
+        java.util.List<Account> accounts = accountService.getAll(10, 1, null, null, "Open");
 
         // Assert
         Mockito.verify(accountRepository, Mockito.times(1)).findByStatus(Status.Open, pageable);
@@ -274,7 +274,7 @@ public class AccountServiceTest {
         Mockito.when(accountRepository.findByType(AccountType.Savings, pageable)).thenReturn(java.util.List.of(existingAccount));
 
         // Act
-        java.util.List<Account> accounts = accountService.getAll(10, 1, null, "Savings", null, null);
+        java.util.List<Account> accounts = accountService.getAll(10, 1, null, "Savings", null);
 
         // Assert
         Mockito.verify(accountRepository, Mockito.times(1)).findByType(AccountType.Savings, pageable);
@@ -290,7 +290,7 @@ public class AccountServiceTest {
         Mockito.when(accountRepository.findByUserId(2, pageable)).thenReturn(java.util.List.of(existingAccount));
 
         // Act
-        java.util.List<Account> accounts = accountService.getAll(10, 1, 2L, null, null, null);
+        java.util.List<Account> accounts = accountService.getAll(10, 1, 2L, null, null);
 
         // Assert
         Mockito.verify(accountRepository, Mockito.times(1)).findByUserId(2, pageable);

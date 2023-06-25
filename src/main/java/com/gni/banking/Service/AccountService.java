@@ -63,7 +63,7 @@ public class AccountService {
         }
     }
 
-    private List<Account> getAccounts(Long userId, AccountType accountType, Status accountStatus, Pageable pageable, String firstNameLastName) {
+    private List<Account> getAccounts(Long userId, AccountType accountType, Status accountStatus, Pageable pageable) {
         //check for parameters and return the correct list
         if (userId != null && accountType != null && accountStatus != null) {
             return GetAccountsWithAllFilters(userId, accountType, accountStatus, pageable);
@@ -118,23 +118,16 @@ public class AccountService {
 
     public List<IbanAccountDTO> findByFirstNameLastName(String firstNameLastName) throws Exception {
         List<IbanAccountDTO> ibans = getIbanByName(firstNameLastName);
-        //List<IbanAccountDTO> accounts = new ArrayList<>();
-        /*for(String iban : ibans){
-            IbanAccountDTO account = new IbanAccountDTO();
-            account.setId(iban);
-            account.set;
-            accounts.add(account);
-        }*/
         return ibans;
     }
 
-    public List<Account> getAll(int limit, int offset, Long userId, String type, String status, String firstNameLastName) throws Exception {
+    public List<Account> getAll(int limit, int offset, Long userId, String type, String status) throws Exception {
         //initialize variables
         Pageable pageable = PageRequest.of(offset, limit);
         AccountType accountType = getAccountType(type);
         Status accountStatus = getStatus(status);
 
-        List<Account> accounts = getAccounts(userId, accountType, accountStatus, pageable, firstNameLastName);
+        List<Account> accounts = getAccounts(userId, accountType, accountStatus, pageable);
         return CheckListForBanksOwnAccount(accounts);
     }
 
