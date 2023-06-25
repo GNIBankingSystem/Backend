@@ -14,11 +14,6 @@ import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends CrudRepository<Account, String> {
-    Iterable<Account> findByUserId(long userId);
-
-
-
-
     @Query("SELECT COUNT(a) > 0 FROM Account a WHERE a.id = :iban")
     boolean ibanExists(@Param("iban") String iban);
     @Override
@@ -33,7 +28,7 @@ public interface AccountRepository extends CrudRepository<Account, String> {
 
     List<Account> getIdByUserId(int id);
 
-    List<Account> findAll(Pageable pageable);
+    List<Account> findByIdNot(Pageable pageable, String id);
 
     List<Account> findByUserId(long userId, Pageable pageable);
 

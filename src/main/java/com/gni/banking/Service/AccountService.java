@@ -68,7 +68,7 @@ public class AccountService {
         } else if (accountType != null) {
             return getAccountsWithAccountTypeFilter(accountType, pageable);
         } else {
-            return accountRepository.findAll(pageable);
+            return accountRepository.findByIdNot(pageable, "NL01INHO0000000001");
         }
     }
 
