@@ -1,5 +1,6 @@
 package com.gni.banking.Repository;
 
+import com.gni.banking.Model.Account;
 import com.gni.banking.Model.Transaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,4 +40,5 @@ public interface TransactionRepository extends CrudRepository<Transaction, Long>
 
     @Query("SELECT t FROM Transaction t WHERE t.performedBy = ?1 AND t.archived = false")
     List<Transaction> getTransactionsByPerformedBy(long id);
-    }
+
+}

@@ -6,6 +6,7 @@ import com.gni.banking.Model.Transaction;
 import com.gni.banking.Model.TransactionPutDto;
 import com.gni.banking.Model.TransactionRequestDTO;
 import com.gni.banking.Model.TransactionResponseDTO;
+import com.gni.banking.Service.AccountService;
 import com.gni.banking.Service.TransactionService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.ModelMapper;
@@ -32,23 +33,39 @@ public class TransactionController {
     private TransactionService service;
     @Autowired
     private JwtTokenDecoder jwtTokenDecoder;
+
+    @Autowired
+    private AccountService accountService;
     private ModelMapper modelMapper;
     public TransactionController() {
         this.service = new TransactionService();
         this.modelMapper = new ModelMapper();
+        this.accountService = new AccountService();
     }
 
     @GetMapping
-    public List<TransactionResponseDTO> getAll(@RequestParam(defaultValue = "0") int offset, @RequestParam(defaultValue = "10") int limit, @RequestParam(required = false) String iban) {
+    public List<TransactionResponseDTO> getAll(HttpServletRequest request, @RequestParam(defaultValue = "0") int offset, @RequestParam(defaultValue = "10") int limit, @RequestParam(required = false) String iban) throws Exception {
         int page = offset / limit;
-        Page<Transaction> transactions = service.getAll(limit, page, iban);
-        return transactions.getContent().stream()
-                .map(transaction -> modelMapper.map(transaction, TransactionResponseDTO.class))
-                .collect(Collectors.toList());
+        String userRole = jwtTokenDecoder.getRoleInToken(request);
+        long idOfUser = jwtTokenDecoder.getIdInToken(request);
+        if(userRole.equals("ROLE_CUSTOMER")){
+            Page<Transaction> transactions = service.getTransacionsByUserId(idOfUser, limit, page);
+            return transactions.getContent().stream()
+                    .map(transaction -> modelMapper.map(transaction, TransactionResponseDTO.class))
+                    .collect(Collectors.toList());
+        }else if(userRole.equals("ROLE_EMPLOYEE")) {
+            Page<Transaction> transactions = service.getAll(limit, page, iban);
+            return transactions.getContent().stream()
+                    .map(transaction -> modelMapper.map(transaction, TransactionResponseDTO.class))
+                    .collect(Collectors.toList());
+        }else{
+            throw new IllegalArgumentException("You are not allowed to perform this action");
+        }
     }
 
 
 
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable long id) {
          if((id <= 0)) {
@@ -92,20 +109,40 @@ public class TransactionController {
         service.delete(id);
     }
 
+
+    //check op accoun from is of user
     @PostMapping("/withdraw")
-    public ResponseEntity<?> withdraw(@RequestBody TransactionRequestDTO transactionRequestDTO) throws Exception {
-            Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
+    public ResponseEntity<?> withdraw(@RequestBody TransactionRequestDTO transactionRequestDTO, HttpServletRequest request) throws Exception {
+
+        String userRole = jwtTokenDecoder.getRoleInToken(request);
+        long idOfUser = jwtTokenDecoder.getIdInToken(request);
+        Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
             transaction.setType(TransactionType.WITHDRAW);
+        transaction.setPerformedBy(jwtTokenDecoder.getIdInToken(request));
             Transaction addedTransaction = service.withdraw(transaction);
-            return ResponseEntity.ok(modelMapper.map(addedTransaction, TransactionResponseDTO.class));
+            if(userRole.equals("ROLE_CUSTOMER") && service.accountFromIsOfUser(transaction, idOfUser)){
+                return ResponseEntity.ok(modelMapper.map(addedTransaction, TransactionResponseDTO.class));
+            }else{
+                throw new IllegalArgumentException("You are not allowed to perform this action");
+            }
     }
 
+    //check op account to is van de user
     @PostMapping("/deposit")
-    public ResponseEntity<?> deposit(@RequestBody TransactionRequestDTO transactionRequestDTO) throws Exception {
-            Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
-            transaction.setType(TransactionType.DEPOSIT);
+    public ResponseEntity<?> deposit(@RequestBody TransactionRequestDTO transactionRequestDTO, HttpServletRequest request) throws Exception {
+
+        String userRole = jwtTokenDecoder.getRoleInToken(request);
+        long idOfUser = jwtTokenDecoder.getIdInToken(request);
+        Transaction transaction = modelMapper.map(transactionRequestDTO, Transaction.class);
+        transaction.setType(TransactionType.DEPOSIT);
+        transaction.setPerformedBy(jwtTokenDecoder.getIdInToken(request));
+        if(userRole.equals("ROLE_CUSTOMER") && service.accountToIsOfUser(transaction, idOfUser)){
             Transaction addedTransaction = service.deposit(transaction);
+            System.out.println("transaction added");
             return ResponseEntity.ok(modelMapper.map(addedTransaction, TransactionResponseDTO.class));
+        }else{
+            throw new IllegalArgumentException("You are not allowed to perform this action");
+        }
     }
 
 }

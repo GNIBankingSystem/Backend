@@ -53,7 +53,7 @@ public class UserService {
         return (User) userRepository.findById(id).orElse(null);
     }
 
-    public double getDayLimitById(int userId){
+    public double getDayLimitById(long userId){
         return userRepository.getDayLimitById(userId);
     }
 

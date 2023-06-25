@@ -202,11 +202,11 @@ public class AccountService {
         return ibans;
     }
 
-    public List<Account> getCurrentAndOpenAccountsByUserId(int userId) {
+    public List<Account> getCurrentAndOpenAccountsByUserId(long userId) {
         return accountRepository.getCurrentAndOpenAccountsByUserId(userId, Status.Open, AccountType.Current);
     }
 
-    public double totalBalance(int userId) {
+    public double totalBalance(long userId) {
         List<Account> accounts = accountRepository.getTotalBalanceOfAccounts(userId, Status.Open);
         double total = 0;
         for (Account account : accounts) {
@@ -223,5 +223,9 @@ public class AccountService {
         Account existingAccount = getByIban(id);
         existingAccount.setBalance(account.getBalance());
         accountRepository.save(existingAccount);
+    }
+
+    public List<Account> getAllByUserId(long userId) {
+        return accountRepository.getAllByUserId(userId);
     }
 }

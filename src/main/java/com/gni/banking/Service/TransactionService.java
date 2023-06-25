@@ -10,8 +10,11 @@ import com.gni.banking.Repository.TransactionRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -44,10 +47,36 @@ public class TransactionService {
         }
 
     }
+    public Page<Transaction> castListToPage(List<Transaction> list, Pageable pageable) {
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), list.size());
+
+        return new PageImpl<>(list.subList(start, end), pageable, list.size());
+    }
+    public Page<Transaction> getTransacionsByUserId(long userId, int limit, int offset) {
+        //lijst van alle accounts van de user
+        List<Account> accounts = accountService.getAllByUserId(userId);
+        //lijst van alle transacties met iban van de accounts
+        List<Transaction> allTransactions = new ArrayList<>();
+        for (Account account: accounts){
+            List<Transaction> transactions = getAll(limit, offset, account.getId()).getContent();
+            allTransactions.addAll(transactions);
+        }
+        int pageNumber = 0; // Example page number
+        int pageSize = 10; // Example page size
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return castListToPage(allTransactions, pageable);
+    }
 
     public Boolean accountFromIsOfUser(Transaction transaction, long userId){
         Account accountFrom = accountService.getByIban(transaction.getAccountFrom());
         return accountFrom.getUserId() == userId;
+    }
+
+    public Boolean accountToIsOfUser(Transaction transaction, long userId){
+        Account accountTo = accountService.getByIban(transaction.getAccountTo());
+        return accountTo.getUserId() == userId;
     }
 
     public Transaction getById(long id) {
@@ -104,17 +133,19 @@ public class TransactionService {
     }
 
     public boolean checkAmountsOnTransaction(String ibanFrom, String ibanTo, double amount) throws Exception {
+        String bankIban = "NL01INHO0000000001";
         Account accountFrom = accountService.getByIban(ibanFrom);
         Account accountTo = accountService.getByIban(ibanTo);
-        System.out.println(accountFrom.getBalance());
         if (accountFrom.getBalance() < amount)
             throw new NotEnoughBalanceException("Not enough money on account");
-        if(accountFrom.getAbsoluteLimit() > accountFrom.getBalance() - amount)
-            throw new LimitOnTransactionExceededException("Absolute limit exceeded");
         if (accountFrom.getCurrency() != accountTo.getCurrency())
             throw new InvalidAccountCurrenyOnTransactionException("You can't transfer money between accounts with different currencies");
-        if(!underDayLimitWithIban(ibanFrom, amount))
-            throw new LimitOnTransactionExceededException("Day limit exceeded");
+        if(!Objects.equals(accountFrom.getId(), bankIban)){
+            if(!underDayLimitWithIban(ibanFrom, amount))
+                throw new LimitOnTransactionExceededException("Day limit exceeded");
+            if(accountFrom.getAbsoluteLimit() > accountFrom.getBalance() - amount)
+                throw new LimitOnTransactionExceededException("Absolute limit exceeded");
+        }
         return true;
     }
 
@@ -154,16 +185,16 @@ public class TransactionService {
     }
 
     public boolean underDayLimitWithIban(String iban, double amount){
-        int userId = (int) accountService.getById(iban).getUserId();
+        long userId = (long) accountService.getById(iban).getUserId();
         return underDayLimit(userId, amount);
     }
 
-    public boolean underDayLimit(int userId, double amount){
+    public boolean underDayLimit(long userId, double amount){
         double amountTransferredToday = amountTransferredToday(userId);
         return amountTransferredToday + amount <= userService.getDayLimitById(userId);
     }
 
-    public double amountTransferredToday(int userId){
+    public double amountTransferredToday(long userId){
 
         //list met accounts --> hier de iban van gebruiken
         List<Account> accountsOfUser = accountService.getCurrentAndOpenAccountsByUserId(userId);
