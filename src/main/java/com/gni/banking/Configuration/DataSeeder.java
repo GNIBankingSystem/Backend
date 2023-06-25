@@ -5,8 +5,8 @@ import com.gni.banking.Enums.Currency;
 import com.gni.banking.Enums.Status;
 import com.gni.banking.Enums.TransactionType;
 import com.gni.banking.Model.Account;
-import com.gni.banking.Model.Transaction;
 import com.gni.banking.Model.PostAccountDTO;
+import com.gni.banking.Model.Transaction;
 import com.gni.banking.Model.User;
 import com.gni.banking.Service.AccountService;
 import com.gni.banking.Service.TransactionService;
@@ -43,7 +43,7 @@ public class DataSeeder implements ApplicationRunner {
         user1.setLastName("venema");
         user1.setPassword("admin");
         user1.setPhoneNumber(612345678);
-        user1.setRoles(ROLE_EMPLOYEE);
+        user1.setRoles(ROLE_ADMIN);
         user1.setTransactionLimit(1000.00);
         user1.setDailyTransaction(0);
         userService.add(user1);
@@ -80,13 +80,12 @@ public class DataSeeder implements ApplicationRunner {
         userService.add(user3);
 
 
-
         Account account = new Account();
         account.setUserId(0);
         account.setType(AccountType.Current);
         account.setCurrency(Currency.EUR);
         account.setBalance(550000000);
-        account.setAbsoluteLimit(100000);
+        account.setAbsoluteLimit(1000000);
         account.setStatus(Status.Open);
         account.setId("NL01INHO0000000001");
         accountService.addCompleteAccount(account);
@@ -96,35 +95,25 @@ public class DataSeeder implements ApplicationRunner {
         account2.setType(AccountType.Current);
         account2.setCurrency(Currency.EUR);
         account2.setBalance(550000000);
-        account2.setAbsoluteLimit(100000000);
+        account2.setAbsoluteLimit(10000000);
         account2.setStatus(Status.Open);
         account2.setId("NL01INHO0000000011");
         accountService.addCompleteAccount(account2);
 
-        PostAccountDTO account1 = new PostAccountDTO();
-        account1.setUserId(1);
-        account1.setType(AccountType.Savings);
-        accountService.add(account1);
-
-        PostAccountDTO account11 = new PostAccountDTO();
-        account11.setUserId(1);
-        account11.setType(AccountType.Current);
-        accountService.add(account11);
-
-        PostAccountDTO account22 = new PostAccountDTO();
-        account2.setUserId(2);
-        account2.setType(AccountType.Current);
-        accountService.add(account22);
-
-        PostAccountDTO account3 = new PostAccountDTO();
+        Account account3 = new Account();
         account3.setUserId(2);
         account3.setType(AccountType.Current);
-        accountService.add(account3);
+        account3.setCurrency(Currency.EUR);
+        account3.setBalance(29.40);
+        account3.setAbsoluteLimit(0);
+        account3.setStatus(Status.Open);
+        account3.setId("NL01INHO0000000012");
+        accountService.addCompleteAccount(account3);
 
-        PostAccountDTO account4 = new PostAccountDTO();
-        account4.setUserId(2);
-        account4.setType(AccountType.Savings);
-        accountService.add(account4);
+        PostAccountDTO postAccountDTO = new PostAccountDTO();
+        postAccountDTO.setUserId(1L);
+        postAccountDTO.setType(AccountType.Current);
+        accountService.add(postAccountDTO);
 
         Transaction transaction1 = new Transaction();
         transaction1.setId(1);

@@ -3,7 +3,11 @@ package com.gni.banking.Service;
 import com.gni.banking.Enums.AccountType;
 import com.gni.banking.Enums.Currency;
 import com.gni.banking.Enums.Status;
-import com.gni.banking.Model.*;
+import com.gni.banking.Model.Account;
+import com.gni.banking.Model.IbanAccountDTO;
+import com.gni.banking.Model.PostAccountDTO;
+import com.gni.banking.Model.PutAccountDTO;
+import com.gni.banking.Model.User;
 import com.gni.banking.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -51,29 +55,65 @@ public class AccountService {
         return accountType;
     }
 
-    private List<Account> getAccounts(Long userId, AccountType accountType, Status accountStatus, Pageable pageable, String firstNameLastName) {
-        //check for parameters and return the correct list
-        if (userId != null && accountType != null && accountStatus != null){
-            CheckUserId(userId);
-            return accountRepository.findByUserIdAndTypeAndStatus(userId, accountType, accountStatus, pageable);
-        } else if (userId != null && accountType != null) {
-            CheckUserId(userId);
-            return accountRepository.findByUserIdAndType(userId, accountType, pageable);
-        } else if (userId != null && accountStatus != null){
-            CheckUserId(userId);
-            return accountRepository.findByUserIdAndStatus(userId, accountStatus, pageable);
-        } else if (accountType != null && accountStatus != null) {
-            return accountRepository.findByTypeAndStatus(accountType, accountStatus, pageable);
-        } else if (accountStatus != null) {
-            return accountRepository.findByStatus(accountStatus, pageable);
-        } else if (userId != null) {
-            CheckUserId(userId);
-            return accountRepository.findByUserId(userId, pageable);
-        } else if (accountType != null) {
-            return accountRepository.findByType(accountType, pageable);
-        } else {
-            return accountRepository.findAll(pageable);
+    private static void CheckUserId(Long userId) {
+        if (userId == 0) {
+            throw new IllegalArgumentException("UserId is inaccessible");
+        } else if (userId < 0) {
+            throw new IllegalArgumentException("UserId is negative");
         }
+    }
+
+    private List<Account> getAccounts(Long userId, AccountType accountType, Status accountStatus, Pageable pageable) {
+        //check for parameters and return the correct list
+        if (userId != null && accountType != null && accountStatus != null) {
+            return GetAccountsWithAllFilters(userId, accountType, accountStatus, pageable);
+        } else if (userId != null && accountType != null) {
+            return GetAccountsWithUserIdAndAccountTypeFilters(userId, accountType, pageable);
+        } else if (userId != null && accountStatus != null) {
+            return getAccountsWithUserIdAndAccountStatusFilters(userId, accountStatus, pageable);
+        } else if (accountType != null && accountStatus != null) {
+            return getAccountsWithAccountTypeAndAccountStatusFilters(accountType, accountStatus, pageable);
+        } else if (accountStatus != null) {
+            return getAccountsWithAccountStatusFilter(accountStatus, pageable);
+        } else if (userId != null) {
+            return getAccountsWithUserIdFilter(userId, pageable);
+        } else if (accountType != null) {
+            return getAccountsWithAccountTypeFilter(accountType, pageable);
+        } else {
+            return accountRepository.findByIdNot(pageable, "NL01INHO0000000001");
+        }
+    }
+
+    private List<Account> getAccountsWithAccountTypeFilter(AccountType accountType, Pageable pageable) {
+        return accountRepository.findByType(accountType, pageable);
+    }
+
+    private List<Account> getAccountsWithUserIdFilter(Long userId, Pageable pageable) {
+        CheckUserId(userId);
+        return accountRepository.findByUserId(userId, pageable);
+    }
+
+    private List<Account> getAccountsWithAccountStatusFilter(Status accountStatus, Pageable pageable) {
+        return accountRepository.findByStatus(accountStatus, pageable);
+    }
+
+    private List<Account> getAccountsWithAccountTypeAndAccountStatusFilters(AccountType accountType, Status accountStatus, Pageable pageable) {
+        return accountRepository.findByTypeAndStatus(accountType, accountStatus, pageable);
+    }
+
+    private List<Account> getAccountsWithUserIdAndAccountStatusFilters(Long userId, Status accountStatus, Pageable pageable) {
+        CheckUserId(userId);
+        return accountRepository.findByUserIdAndStatus(userId, accountStatus, pageable);
+    }
+
+    private List<Account> GetAccountsWithUserIdAndAccountTypeFilters(Long userId, AccountType accountType, Pageable pageable) {
+        CheckUserId(userId);
+        return accountRepository.findByUserIdAndType(userId, accountType, pageable);
+    }
+
+    private List<Account> GetAccountsWithAllFilters(Long userId, AccountType accountType, Status accountStatus, Pageable pageable) {
+        CheckUserId(userId);
+        return accountRepository.findByUserIdAndTypeAndStatus(userId, accountType, accountStatus, pageable);
     }
 
     public List<IbanAccountDTO> findByFirstNameLastName(String firstNameLastName) throws Exception {
@@ -81,22 +121,23 @@ public class AccountService {
         return ibans;
     }
 
-    private static void CheckUserId(Long userId) {
-        if (userId == 0) {
-            throw new IllegalArgumentException("UserId is inaccessible");
-        }
-        else if (userId < 0) {
-            throw new IllegalArgumentException("UserId is negative");
-        }
-    }
-
-    public List<Account> getAll(int limit, int offset, Long userId, String type, String status, String firstNameLastName) throws Exception {
+    public List<Account> getAll(int limit, int offset, Long userId, String type, String status) throws Exception {
         //initialize variables
         Pageable pageable = PageRequest.of(offset, limit);
         AccountType accountType = getAccountType(type);
         Status accountStatus = getStatus(status);
 
-        return getAccounts(userId, accountType, accountStatus, pageable, firstNameLastName);
+        List<Account> accounts = getAccounts(userId, accountType, accountStatus, pageable);
+        return CheckListForBanksOwnAccount(accounts);
+    }
+
+    private List<Account> CheckListForBanksOwnAccount(List<Account> accounts) {
+        if (accounts.size() != 0) {
+            if (accounts.get(0).getId().equals("NL01INHO0000000001")) {
+                accounts.remove(0);
+            }
+        }
+        return accounts;
     }
 
 
@@ -111,14 +152,23 @@ public class AccountService {
     public Account add(PostAccountDTO accountRequest) throws Exception {
         Account a = new Account();
         a.setId(ibanService.GenerateIban());
-        a.setUserId(accountRequest.getUserId());
+        CheckAndSetUserId(accountRequest, a);
         a.setType(accountRequest.getType());
         a.setAbsoluteLimit(0.00);
         a.setCurrency(Currency.EUR);
-        a.setBalance(1000.00);
+        a.setBalance(0.00);
         a.setStatus(Status.Open);
 
         return accountRepository.save(a);
+    }
+
+    private void CheckAndSetUserId(PostAccountDTO accountRequest, Account a) {
+        //checks if the user exists
+        if (userService.getById(accountRequest.getUserId()) == null) {
+            throw new IllegalArgumentException("UserId does not have a user");
+        } else {
+            a.setUserId(accountRequest.getUserId());
+        }
     }
 
     public Account addCompleteAccount(Account account) {
@@ -142,11 +192,7 @@ public class AccountService {
 
     public Account changeStatus(String iban) {
         Account existingAccount = getByIban(iban);
-        if (existingAccount.getStatus().toString().equals("Open")) {
-            existingAccount.setStatus(com.gni.banking.Enums.Status.Closed);
-        } else {
-            existingAccount.setStatus(com.gni.banking.Enums.Status.Open);
-        }
+        existingAccount.setStatus(com.gni.banking.Enums.Status.Closed);
         return accountRepository.save(existingAccount);
     }
 
@@ -154,12 +200,12 @@ public class AccountService {
         String[] names = name.split(" ");
         String firstname = names[0];
         String lastName = names[1];
-        for(int i = 2; i < names.length; i++){
+        for (int i = 2; i < names.length; i++) {
             lastName += " " + names[i];
         }
 
         List<User> Users = userService.findByFirstNameAndLastName(firstname, lastName);
-        if(Users.isEmpty()){
+        if (Users.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }
         List<Account> accounts = new ArrayList<>();
@@ -176,7 +222,7 @@ public class AccountService {
                 usableAccounts.add(account);
             }
         });
-        if(usableAccounts.isEmpty()){
+        if (usableAccounts.isEmpty()) {
             throw new IllegalArgumentException("No accounts found");
         }
 
@@ -189,7 +235,7 @@ public class AccountService {
             ibans.add(iban);
         });
 
-        if(ibans.isEmpty()){
+        if (ibans.isEmpty()) {
             throw new IllegalArgumentException("No accounts found");
         }
         return ibans;

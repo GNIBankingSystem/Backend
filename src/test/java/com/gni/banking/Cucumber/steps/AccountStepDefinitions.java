@@ -30,7 +30,7 @@ import java.util.Objects;
 
 public class AccountStepDefinitions extends BaseStepDefinitions{
 
-    /*@Autowired
+    @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -75,11 +75,11 @@ public class AccountStepDefinitions extends BaseStepDefinitions{
     public void i_should_receive_all_accounts() {
 
         int actual = JsonPath.read(response.getBody(), "$.size()");
-        Assertions.assertEquals(6, actual);
+        Assertions.assertEquals(3, actual);
     }
 
-    @When("I create an account with userId {int} and accountType {string}")
-    public void iCreateAnAccountWithUserIdAndAccountType(int userId, String accountType) throws JsonProcessingException {
+    @When("I create an account with userId {long} and accountType {string}")
+    public void iCreateAnAccountWithUserIdAndAccountType(Long userId, String accountType) throws JsonProcessingException {
         PostAccountDTO dto = createPostAccountDTO(userId, accountType);
         httpHeaders.add("Content-Type", "application/json");
         response = restTemplate.exchange("/accounts",
@@ -90,7 +90,7 @@ public class AccountStepDefinitions extends BaseStepDefinitions{
                 ), String.class);
     }
 
-    private PostAccountDTO createPostAccountDTO(int userId, String accountType) {
+    private PostAccountDTO createPostAccountDTO(Long userId, String accountType) {
         PostAccountDTO dto = new PostAccountDTO();
         dto.setUserId(userId);
         dto.setType(AccountType.valueOf(accountType));
@@ -165,5 +165,5 @@ public class AccountStepDefinitions extends BaseStepDefinitions{
                 String.class);
         Account account = mapper.readValue(response.getBody(), Account.class);
         Assertions.assertEquals(account.getStatus(), Status.Closed);
-    }*/
+    }
 }
