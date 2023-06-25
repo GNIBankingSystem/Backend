@@ -3,7 +3,11 @@ package com.gni.banking.Service;
 import com.gni.banking.Enums.AccountType;
 import com.gni.banking.Enums.Currency;
 import com.gni.banking.Enums.Status;
-import com.gni.banking.Model.*;
+import com.gni.banking.Model.Account;
+import com.gni.banking.Model.IbanAccountDTO;
+import com.gni.banking.Model.PostAccountDTO;
+import com.gni.banking.Model.PutAccountDTO;
+import com.gni.banking.Model.User;
 import com.gni.banking.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -51,13 +55,21 @@ public class AccountService {
         return accountType;
     }
 
+    private static void CheckUserId(Long userId) {
+        if (userId == 0) {
+            throw new IllegalArgumentException("UserId is inaccessible");
+        } else if (userId < 0) {
+            throw new IllegalArgumentException("UserId is negative");
+        }
+    }
+
     private List<Account> getAccounts(Long userId, AccountType accountType, Status accountStatus, Pageable pageable, String firstNameLastName) {
         //check for parameters and return the correct list
-        if (userId != null && accountType != null && accountStatus != null){
+        if (userId != null && accountType != null && accountStatus != null) {
             return GetAccountsWithAllFilters(userId, accountType, accountStatus, pageable);
         } else if (userId != null && accountType != null) {
             return GetAccountsWithUserIdAndAccountTypeFilters(userId, accountType, pageable);
-        } else if (userId != null && accountStatus != null){
+        } else if (userId != null && accountStatus != null) {
             return getAccountsWithUserIdAndAccountStatusFilters(userId, accountStatus, pageable);
         } else if (accountType != null && accountStatus != null) {
             return getAccountsWithAccountTypeAndAccountStatusFilters(accountType, accountStatus, pageable);
@@ -114,15 +126,6 @@ public class AccountService {
             accounts.add(account);
         }*/
         return ibans;
-    }
-
-    private static void CheckUserId(Long userId) {
-        if (userId == 0) {
-            throw new IllegalArgumentException("UserId is inaccessible");
-        }
-        else if (userId < 0) {
-            throw new IllegalArgumentException("UserId is negative");
-        }
     }
 
     public List<Account> getAll(int limit, int offset, Long userId, String type, String status, String firstNameLastName) throws Exception {
@@ -204,12 +207,12 @@ public class AccountService {
         String[] names = name.split(" ");
         String firstname = names[0];
         String lastName = names[1];
-        for(int i = 2; i < names.length; i++){
+        for (int i = 2; i < names.length; i++) {
             lastName += " " + names[i];
         }
 
         List<User> Users = userService.findByFirstNameAndLastName(firstname, lastName);
-        if(Users.isEmpty()){
+        if (Users.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }
         List<Account> accounts = new ArrayList<>();
@@ -226,7 +229,7 @@ public class AccountService {
                 usableAccounts.add(account);
             }
         });
-        if(usableAccounts.isEmpty()){
+        if (usableAccounts.isEmpty()) {
             throw new IllegalArgumentException("No accounts found");
         }
 
@@ -239,7 +242,7 @@ public class AccountService {
             ibans.add(iban);
         });
 
-        if(ibans.isEmpty()){
+        if (ibans.isEmpty()) {
             throw new IllegalArgumentException("No accounts found");
         }
         return ibans;

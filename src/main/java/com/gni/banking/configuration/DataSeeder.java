@@ -3,9 +3,7 @@ package com.gni.banking.Configuration;
 import com.gni.banking.Enums.AccountType;
 import com.gni.banking.Enums.Currency;
 import com.gni.banking.Enums.Status;
-import com.gni.banking.Enums.TransactionType;
 import com.gni.banking.Model.Account;
-import com.gni.banking.Model.Transaction;
 import com.gni.banking.Model.PostAccountDTO;
 import com.gni.banking.Model.User;
 import com.gni.banking.Service.AccountService;
@@ -15,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 import static com.gni.banking.Enums.Role.*;
 
@@ -77,7 +73,6 @@ public class DataSeeder implements ApplicationRunner {
         user3.setTransactionLimit(1000.00);
         user3.setDailyTransaction(0);
         userService.add(user3);
-
 
 
         Account account = new Account();

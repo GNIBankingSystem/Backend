@@ -16,6 +16,7 @@ import java.util.Optional;
 public interface AccountRepository extends CrudRepository<Account, String> {
     @Query("SELECT COUNT(a) > 0 FROM Account a WHERE a.id = :iban")
     boolean ibanExists(@Param("iban") String iban);
+
     @Override
     Optional<Account> findById(String iban);
 
@@ -24,7 +25,7 @@ public interface AccountRepository extends CrudRepository<Account, String> {
 
 
     @Query("SELECT a FROM Account a WHERE a.userId = :userId AND a.status = :status")
-    List<Account> getTotalBalanceOfAccounts(@Param("userId")int userId, @Param("status") Status status);
+    List<Account> getTotalBalanceOfAccounts(@Param("userId") int userId, @Param("status") Status status);
 
     List<Account> getIdByUserId(int id);
 
@@ -33,7 +34,7 @@ public interface AccountRepository extends CrudRepository<Account, String> {
     List<Account> findByUserId(long userId, Pageable pageable);
 
     @Query("SELECT userId FROM Account WHERE id = :iban")
-    int getUserIdById(@Param("iban")String iban);
+    int getUserIdById(@Param("iban") String iban);
 
     List<Account> findByType(AccountType type, Pageable pageable);
 
