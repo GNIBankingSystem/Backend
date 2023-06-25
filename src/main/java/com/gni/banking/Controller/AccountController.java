@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -84,7 +85,12 @@ public class AccountController {
     public ResponseEntity<?> getAccountById(HttpServletRequest request, @PathVariable String id) throws Exception {
         String userRole = jwtTokenDecoder.getRoleInToken(request);
         Account account = service.getById(id);
-        if(userRole.equals("ROLE_CUSTOMER")){
+
+        if (Objects.equals(id, "NL01INHO0000000001")) {
+            if (!userRole.equals("ROLE_ADMIN")) {
+                throw new IllegalArgumentException("You are not authorized to access this resource");
+            }
+        } else if(userRole.equals("ROLE_CUSTOMER")){
             long idOfUser = jwtTokenDecoder.getIdInToken(request);
             if(account.getUserId() != idOfUser) {
                 throw new IllegalArgumentException("You are not authorized to access this resource");
