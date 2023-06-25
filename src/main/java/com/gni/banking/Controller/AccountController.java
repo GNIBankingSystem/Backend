@@ -81,45 +81,44 @@ public class AccountController {
 
     //@PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @GetMapping("/{id}")
-    public Account getAccountById(HttpServletRequest request, @PathVariable String id) throws Exception {
+    public ResponseEntity<?> getAccountById(HttpServletRequest request, @PathVariable String id) throws Exception {
         String userRole = jwtTokenDecoder.getRoleInToken(request);
+        Account account = service.getById(id);
         if(userRole.equals("ROLE_CUSTOMER")){
             long idOfUser = jwtTokenDecoder.getIdInToken(request);
-            if(service.getById(id).getUserId() == idOfUser){
-                return service.getById(id);
-            }else{
+            if(account.getUserId() != idOfUser) {
                 throw new IllegalArgumentException("You are not authorized to access this resource");
             }
-        }else if(userRole.equals("ROLE_EMPLOYEE")) {
-            return service.getById(id);
         }
-        return null;
+        return ResponseEntity.ok(modelMapper.map(account, Account.class));
     }
 
 
     @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @PostMapping
-    public ResponseEntity<Account> add(@RequestBody PostAccountDTO a) throws Exception {
+    public ResponseEntity<?> add(@RequestBody PostAccountDTO a) throws Exception {
 
         return ResponseEntity.status(201).body(service.add(a));
     }
 
     @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @PostMapping("/addAccount")
-    public ResponseEntity<Account> add(@RequestBody Account a) {
+    public ResponseEntity<?> add(@RequestBody Account a) {
 
         return ResponseEntity.status(201).body(service.addCompleteAccount(a));
     }
 
     @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @PutMapping("/{iban}")
-    public Account update(@RequestBody PutAccountDTO account, @PathVariable String iban) throws Exception {
-        return service.update(account, iban);
+    public ResponseEntity<?> update(@RequestBody PutAccountDTO putAccount, @PathVariable String iban) throws Exception {
+        Account account = service.update(putAccount, iban);
+        return ResponseEntity.ok(modelMapper.map(account, Account.class));
     }
 
     @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @DeleteMapping("/{iban}")
-    public Account changeStatus(@PathVariable String iban) {
-        return service.changeStatus(iban);
+    public ResponseEntity<?> changeStatus(@PathVariable String iban) {
+        Account account = service.changeStatus(iban);
+        return ResponseEntity.ok(modelMapper.map(account, Account.class));
     }
 }
