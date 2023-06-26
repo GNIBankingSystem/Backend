@@ -85,7 +85,12 @@ public class UserService {
     public User add(User a) {
         String username = a.getUsername();
         System.out.println(a.getUsername());
-        a.setRoles(Role.ROLE_CUSTOMER);
+        if (a.getRoles() == null){
+            a.setRoles(Role.ROLE_CUSTOMER);
+        } else {
+            a.setRoles(a.getRoles());
+        }
+
         a.setDailyTransaction(1000);
         a.setDayLimit(1000);
         if (userRepository.findUserByUsername(username).isEmpty()) {
