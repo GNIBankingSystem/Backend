@@ -125,7 +125,7 @@ public class UserService {
     }
 
 
-    public double getDayLimitById(int userId){
+    public double getDayLimitById(long userId){
         return userRepository.getDayLimitById(userId);
     }
 
