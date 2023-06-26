@@ -58,14 +58,15 @@ public class AccountController {
             return service.findByFirstNameLastName(firstNameLastName.toLowerCase());
         }
 
+        long id;
         if (userRole.equals("ROLE_EMPLOYEE") || userRole.equals("ROLE_ADMIN")) {
-            return service.getAll(limit, offset, userId, type, status);
+            id = userId;
         } else if (userRole.equals("ROLE_CUSTOMER")) {
-            long idOfUser = jwtTokenDecoder.getIdInToken(request);
-            return service.getAll(limit, offset, idOfUser, type, status);
+            id = jwtTokenDecoder.getIdInToken(request);
         } else {
             throw new Exception("You are not authorized to access this resource");
         }
+        return service.getAll(limit, offset, id, type, status);
     }
 
     @GetMapping("/{id}")
