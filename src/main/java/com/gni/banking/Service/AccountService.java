@@ -214,9 +214,9 @@ public class AccountService {
             accounts.addAll(account);
         });
 
-        //String finalLastName = lastName;
+        String finalLastName = lastName;
         List<Account> usableAccounts = getUsableAccounts(accounts);
-        List<IbanAccountDTO> ibans = ibans(usableAccounts, firstname, lastName);
+        List<IbanAccountDTO> ibans = ibans(usableAccounts, firstname, finalLastName);
 
 
         return ibans;
