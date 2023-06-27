@@ -214,8 +214,31 @@ public class AccountService {
             accounts.addAll(account);
         });
 
+        //String finalLastName = lastName;
+        List<Account> usableAccounts = getUsableAccounts(accounts);
+        List<IbanAccountDTO> ibans = ibans(usableAccounts, firstname, lastName);
 
+
+        return ibans;
+    }
+
+    private List<IbanAccountDTO> ibans(List<Account> accounts, String firstname, String lastName){
         List<IbanAccountDTO> ibans = new ArrayList<>();
+        accounts.forEach(account -> {
+            IbanAccountDTO iban = new IbanAccountDTO();
+            iban.setId(account.getId());
+            iban.setFirstName(firstname);
+            iban.setLastName(lastName);
+            ibans.add(iban);
+        });
+
+        if (ibans.isEmpty()) {
+            throw new IllegalArgumentException("No accounts found");
+        }
+        return ibans;
+    }
+
+    private List<Account> getUsableAccounts(List<Account> accounts){
         List<Account> usableAccounts = new ArrayList<>();
         accounts.forEach(account -> {
             if (account.getStatus() == com.gni.banking.Enums.Status.Open && account.getType() == com.gni.banking.Enums.AccountType.Current) {
@@ -225,20 +248,7 @@ public class AccountService {
         if (usableAccounts.isEmpty()) {
             throw new IllegalArgumentException("No accounts found");
         }
-
-        String finalLastName = lastName;
-        usableAccounts.forEach(account -> {
-            IbanAccountDTO iban = new IbanAccountDTO();
-            iban.setId(account.getId());
-            iban.setFirstName(firstname);
-            iban.setLastName(finalLastName);
-            ibans.add(iban);
-        });
-
-        if (ibans.isEmpty()) {
-            throw new IllegalArgumentException("No accounts found");
-        }
-        return ibans;
+        return usableAccounts;
     }
 
     public List<Account> getCurrentAndOpenAccountsByUserId(long userId) {
